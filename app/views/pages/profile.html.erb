@@ -1,0 +1,18 @@
+<div class="profile-page">
+  <header class="profile-header">
+    <div class="avatar-lg"></div>
+    <div>
+      <h1 class="handle"><%= @account_name %></h1>
+      <p class="school"><%= @school_name %></p>
+      <%= link_to "Back to Home", root_path, class: "btn" %>
+    </div>
+  </header>
+
+  <section class="profile-stats">
+    <h2>Stats</h2>
+    <ul>
+      <li><strong>Alien Translation:</strong> High score — <span><%= @alien_high_score || "—" %></span>, Rank — <span><%= @alien_rank || "—" %></span></li>
+      <li><strong>Blast Off!:</strong> High score — <span><%= @blast_high_score || "—" %></span>, Rank — <span><%= @blast_rank || "—" %></span></li>
+    </ul>
+  </section>
+</div>

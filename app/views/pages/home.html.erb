@@ -1,0 +1,53 @@
+<div class="home">
+  <%= link_to profile_path, class: "profile link-reset" do %>
+    <div class="avatar-placeholder" aria-hidden="true"></div>
+    <div class="profile-meta">
+      <div class="handle"><%= @account_name || "@AccountName" %></div>
+      <div class="school"><%= @school_name || "(School Name)" %></div>
+    </div>
+  <% end %>
+
+  <section class="games">
+    <article class="game-card">
+      <div class="game-badge"></div>
+      <div class="game-content">
+        <h2 class="game-title">Alien Translation <span>(spelling)</span></h2>
+        <div class="stats">
+          <div class="stat">
+            <label>high score</label>
+            <div class="stat-box"><%= @alien_high_score || "—" %></div>
+          </div>
+          <div class="stat">
+            <label>class ranking</label>
+            <div class="stat-box"><%= @alien_rank || "—" %></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="game-card">
+      <div class="game-badge"></div>
+      <div class="game-content">
+        <h2 class="game-title">Blast Off! <span>(maths)</span></h2>
+        <div class="stats">
+          <div class="stat">
+            <label>high score</label>
+            <div class="stat-box"><%= @blast_high_score || "—" %></div>
+          </div>
+          <div class="stat">
+            <label>class ranking</label>
+            <div class="stat-box"><%= @blast_rank || "—" %></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="total-points">
+    <h2>TOTAL POINTS</h2>
+    <div class="stat">
+      <label>class ranking</label>
+      <div class="stat-box"><%= @total_rank || "—" %></div>
+    </div>
+  </section>
+</div>
