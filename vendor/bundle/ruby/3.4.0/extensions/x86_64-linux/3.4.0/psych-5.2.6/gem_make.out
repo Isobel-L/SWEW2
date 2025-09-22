@@ -1,0 +1,31 @@
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/psych-5.2.6/ext/psych
+/home/wisking/.local/share/mise/installs/ruby/3.4.5/bin/ruby extconf.rb
+checking for pkg-config for yaml-0.1... not found
+checking for yaml.h... yes
+checking for yaml_get_version() in -lyaml... yes
+creating Makefile
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/psych-5.2.6/ext/psych
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-fzgouf sitelibdir\=./.gem.20250918-28670-fzgouf clean
+cd libyaml && make clean
+/bin/sh: 1: cd: can't cd to libyaml
+make: [Makefile:287: clean-so] Error 2 (ignored)
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/psych-5.2.6/ext/psych
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-fzgouf sitelibdir\=./.gem.20250918-28670-fzgouf
+compiling psych.c
+compiling psych_emitter.c
+compiling psych_parser.c
+compiling psych_to_ruby.c
+compiling psych_yaml_tree.c
+linking shared-object psych.so
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/psych-5.2.6/ext/psych
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-fzgouf sitelibdir\=./.gem.20250918-28670-fzgouf install
+/usr/bin/install -c -m 0755 psych.so ./.gem.20250918-28670-fzgouf
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/psych-5.2.6/ext/psych
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-fzgouf sitelibdir\=./.gem.20250918-28670-fzgouf clean
+cd libyaml && make clean
+/bin/sh: 1: cd: can't cd to libyaml
+make: [Makefile:287: clean-so] Error 2 (ignored)

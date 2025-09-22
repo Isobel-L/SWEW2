@@ -1,0 +1,25 @@
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/erb-5.0.2/ext/erb/escape
+/home/wisking/.local/share/mise/installs/ruby/3.4.5/bin/ruby extconf.rb
+checking for rb_ext_ractor_safe() in ruby.h... yes
+creating Makefile
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/erb-5.0.2/ext/erb/escape
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-n1zm6u sitelibdir\=./.gem.20250918-28670-n1zm6u clean
+make: Warning: File 'Makefile' has modification time 0.61 s in the future
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/erb-5.0.2/ext/erb/escape
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-n1zm6u sitelibdir\=./.gem.20250918-28670-n1zm6u
+make: Warning: File 'Makefile' has modification time 0.58 s in the future
+compiling escape.c
+linking shared-object erb/escape.so
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/erb-5.0.2/ext/erb/escape
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-n1zm6u sitelibdir\=./.gem.20250918-28670-n1zm6u install
+make: Warning: File 'escape.so' has modification time 0.61 s in the future
+/usr/bin/install -c -m 0755 escape.so ./.gem.20250918-28670-n1zm6u/erb
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/erb-5.0.2/ext/erb/escape
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-n1zm6u sitelibdir\=./.gem.20250918-28670-n1zm6u clean

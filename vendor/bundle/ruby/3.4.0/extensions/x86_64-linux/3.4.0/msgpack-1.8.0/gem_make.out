@@ -1,0 +1,45 @@
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/msgpack-1.8.0/ext/msgpack
+/home/wisking/.local/share/mise/installs/ruby/3.4.5/bin/ruby extconf.rb
+checking for rb_enc_interned_str() in ruby.h... yes
+checking for rb_hash_new_capa() in ruby.h... yes
+checking for rb_proc_call_with_block() in ruby.h... yes
+checking for rb_gc_mark_locations() in ruby.h... yes
+checking for whether -fvisibility=hidden is accepted as CFLAGS... yes
+checking for whether -I.. is accepted as CFLAGS... yes
+checking for whether -Wall is accepted as CFLAGS... yes
+checking for whether -std=gnu99 is accepted as CFLAGS... yes
+checking for whether -DHASH_ASET_DEDUPE=1 is accepted as CFLAGS... yes
+checking for whether -DSTR_UMINUS_DEDUPE_FROZEN=1 is accepted as CFLAGS... yes
+creating Makefile
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/msgpack-1.8.0/ext/msgpack
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-c8ziky sitelibdir\=./.gem.20250918-28670-c8ziky clean
+make: Warning: File 'Makefile' has modification time 0.42 s in the future
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/msgpack-1.8.0/ext/msgpack
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-c8ziky sitelibdir\=./.gem.20250918-28670-c8ziky
+make: Warning: File 'Makefile' has modification time 0.36 s in the future
+compiling buffer.c
+compiling buffer_class.c
+compiling extension_value_class.c
+compiling factory_class.c
+compiling packer.c
+compiling packer_class.c
+compiling packer_ext_registry.c
+compiling rbinit.c
+compiling rmem.c
+compiling unpacker.c
+compiling unpacker_class.c
+compiling unpacker_ext_registry.c
+linking shared-object msgpack/msgpack.so
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/msgpack-1.8.0/ext/msgpack
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-c8ziky sitelibdir\=./.gem.20250918-28670-c8ziky install
+make: Warning: File 'msgpack.so' has modification time 7.7e-05 s in the future
+/usr/bin/install -c -m 0755 msgpack.so ./.gem.20250918-28670-c8ziky/msgpack
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /mnt/e/Private-stuff/WESAM/University/2025/semester2/SoftwareWkShop/SWEW2/vendor/bundle/ruby/3.4.0/gems/msgpack-1.8.0/ext/msgpack
+make DESTDIR\= sitearchdir\=./.gem.20250918-28670-c8ziky sitelibdir\=./.gem.20250918-28670-c8ziky clean
