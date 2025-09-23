@@ -1,0 +1,24 @@
+<!-- app/views/games/new.html.erb -->
+<div class="container mt-4">
+  <h1>Alien Translation (Unscramble)</h1>
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger"><%= alert %></div>
+  <% end %>
+  <p><strong>Scrambled:</strong> <%= @puzzle.scrambled_word %></p>
+  <p><strong>Attempts:</strong> <%= session[:attempts].to_i %></p>
+  <% if @hint.present? %>
+    <p><strong>Hint:</strong> <%= @hint %></p>
+  <% end %>
+  <%= form_with url: games_path, method: :post, local: true do |f| %>
+    <div class="form-group">
+      <%= f.label :attempt, "Your guess" %>
+      <%= f.text_field :attempt, class: "form-control", autofocus: true %>
+    </div>
+    <%= f.submit "Check", class: "btn btn-primary mt-2" %>
+  <% end %>
+  <hr>
+  <%= link_to "New Puzzle", new_game_path, class: "btn btn-secondary" %>
+</div>
