@@ -44,7 +44,7 @@ class GamesController < ApplicationController
     @puzzle  = puzzle
 
     if service.check_attempt(puzzle, params[:attempt])
-      redirect_to new_game_path, notice: "Correct! The word was #{solution}."
+      redirect_to alien_translation_path, notice: "Correct! The word was #{solution}."
     else
       @hint = service.get_hint(puzzle, attempts: attempts)
       flash.now[:alert] = "Try again! Hint: #{@hint}"
