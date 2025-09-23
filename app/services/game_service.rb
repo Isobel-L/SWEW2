@@ -1,4 +1,3 @@
-# app/services/game_service.rb (top-level class is fine)
 class GameService
   def initialize(word_repository:, scrambler:, validator:, hint_manager:)
     @word_repository = word_repository
@@ -8,9 +7,14 @@ class GameService
   end
 
   def generate_puzzle
-    word = @word_repository.fetch_random
-    scrambled = @scrambler.scramble(word)
-    Puzzle.new(solution: word, scrambled_word: scrambled, hint_manager: @hint_manager)
+    word     = @word_repository.fetch_random
+    builder  = DefaultPuzzleBuilder.new
+    director = PuzzleDirector.new(builder)
+    director.construct(
+      word: word,
+      scrambler: @scrambler,
+      hint_manager: @hint_manager
+    )
   end
 
   def check_attempt(puzzle, attempt)
