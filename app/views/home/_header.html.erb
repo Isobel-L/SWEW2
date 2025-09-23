@@ -1,28 +1,25 @@
 <!-- app/views/layouts/_header.html.erb -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <%= link_to 'Phantom Devs', root_path, class:"navbar-brand" %>
-
+  <%= link_to 'Phantom Devs', root_path, class: "navbar-brand" %>
   <!-- Toggler for mobile -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <!-- Links -->
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
-      <%# about page %>
+      <%# About page %>
       <li class="nav-item">
         <%= link_to "About", "/about", class: "nav-link" %>
       </li>
-      <%# profile page %>
+      <%# Profile page %>
       <li class="nav-item">
         <%= link_to "Profile", profile_path, class: "nav-link" %>
       </li>
-      <%# Alien Translation page %>
+      <%# Alien Translation game (new design-patterns version) %>
       <li class="nav-item">
         <%= link_to "Alien Translation", alien_translation_path, class: "nav-link" %>
-
       </li>
       <%# Blast Off page %>
       <li class="nav-item">
