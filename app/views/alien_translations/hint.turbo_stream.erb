@@ -1,7 +1,6 @@
-<%= turbo_stream.update "hint" do %>  <%# update == replace inner HTML %>
-  <% if @hint.present? %>
-    <p class="mb-0"><strong>Hint:</strong> <%= @hint %></p>
-  <% else %>
-    <p class="mb-0"><em>No hint yet</em></p>
-  <% end %>
+<%= turbo_stream.update "hint" do %>
+  <p><strong>Hint:</strong> <%= @hint.inspect %></p>
+  <small style="opacity:.6">
+    stage=<%= Hints::SessionProgressStore.new(session).stage %>
+  </small>
 <% end %>
