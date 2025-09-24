@@ -1,24 +1,7 @@
 class AlienTranslationsController < ApplicationController
   def alien_translation
-    repo      = ::Repositories::StaticWordRepository.new
-    scrambler = ::Scramblers::ShuffleScrambler.new
-    validator = ::Validators::ExactMatchValidator.new
-    hint_mgr  = ::Hints::ProgressiveHintManager.new
-
-    @service = GameService.new(
-      word_repository: repo,
-      scrambler: scrambler,
-      validator: validator,
-      hint_manager: hint_mgr
-    )
-
-    @puzzle = @service.generate_puzzle
-    session[:solution]  = @puzzle.solution
-    session[:scrambled] = @puzzle.scrambled_word
-
-    session[:attempts] = 0
-    Hints::SessionProgressStore.new(session).reset!
-
+    facade  = AlienTranslations::AlienTranslationsFacade.new(session: session)
+    @puzzle = facade.start_new_puzzle!
     render :alien_translation
   end
 
