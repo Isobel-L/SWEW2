@@ -1,5 +1,6 @@
 # SWEWK2
 
 Naming conventions:
-Classes: CamelCase
 File names: camel_case
+Classes: CamelCase
+Methods: camel_case
