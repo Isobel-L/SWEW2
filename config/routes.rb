@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get "home/about"
   get "home/index"
   get "up" => "rails/health#show", as: :rails_health_check
-  get "alien_translation", to: "games#alien_translation", as: :alien_translation
-  post "alien_translation", to: "games#create"
-  post "alien_translation/hint", to: "games#hint", as: :alien_translation_hint
+  get  "alien_translation", to: "alien_translations#alien_translation", as: :alien_translation
+  post "alien_translation", to: "alien_translations#create"
+  post "alien_translation/hint", to: "alien_translations#hint", as: :alien_translation_hint
 end
