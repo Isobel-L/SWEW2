@@ -1,0 +1,22 @@
+<!-- app/views/games/alien_translation.html.erb -->
+<h1>Alien Translation</h1>
+<p><strong>Scrambled:</strong> <%= (session[:scrambled] || @puzzle&.scrambled_word).to_s %></p>
+<p><strong>Attempts:</strong> <%= session[:attempts].to_i %></p>
+<%= form_with url: alien_translation_path, method: :post, local: true do |f| %>
+  <%= f.label :attempt, "Your guess:" %>
+  <%= f.text_field :attempt, autofocus: true %>
+  <%= f.submit "Check" %>
+<% end %>
+<%= button_to "Get a Hint", alien_translation_hint_path, method: :post %>
+<% if flash[:notice].present? %>
+  <p style="color: green"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert].present? %>
+  <p style="color: red"><%= flash[:alert] %></p>
+<% end %>
+<!-- HINT AREA -->
+<div id="hint">
+  <% if @hint.present? %>
+    <p><strong>Hint:</strong> <%= @hint %></p>
+  <% end %>
+</div>

@@ -1,0 +1,7 @@
+<%= turbo_stream.update "hint" do %>  <%# update == replace inner HTML %>
+  <% if @hint.present? %>
+    <p class="mb-0"><strong>Hint:</strong> <%= @hint %></p>
+  <% else %>
+    <p class="mb-0"><em>No hint yet</em></p>
+  <% end %>
+<% end %>

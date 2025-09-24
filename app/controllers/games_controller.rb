@@ -1,54 +1,87 @@
 class GamesController < ApplicationController
-  def new
-    repo      = ::Repositories::StaticWordRepository.new
-    scrambler = ::Scramblers::ShuffleScrambler.new
-    validator = ::Validators::ExactMatchValidator.new
-    hint_mgr  = ::Hints::ProgressiveHintManager.new
+  def alien_translation
+  repo      = ::Repositories::StaticWordRepository.new
+  scrambler = ::Scramblers::ShuffleScrambler.new
+  validator = ::Validators::ExactMatchValidator.new
+  hint_mgr  = ::Hints::ProgressiveHintManager.new
 
-    @service = GameService.new(
-      word_repository: repo,
-      scrambler: scrambler,
-      validator: validator,
-      hint_manager: hint_mgr
-    )
+  @service = GameService.new(
+    word_repository: repo,
+    scrambler: scrambler,
+    validator: validator,
+    hint_manager: hint_mgr
+  )
 
-    @puzzle = @service.generate_puzzle
-    session[:solution]  = @puzzle.solution
-    session[:scrambled] = @puzzle.scrambled_word
-    session[:attempts]  = 0
+  @puzzle = @service.generate_puzzle
+  session[:solution]    = @puzzle.solution
+  session[:scrambled]   = @puzzle.scrambled_word
+  session[:attempts]    = 0
+  session[:hint_stage]  = 0        # NEW
+  session[:last_hint]   = nil      # NEW
+end
+
+def hint
+  solution  = session[:solution]
+  scrambled = session[:scrambled]
+  return redirect_to(alien_translation_path, alert: "No active puzzle.") if solution.blank? || scrambled.blank?
+
+  # advance stage per click
+  session[:hint_stage] = session[:hint_stage].to_i + 1
+  stage = session[:hint_stage]
+
+  # build puzzle + manager
+  hint_mgr = ::Hints::ProgressiveHintManager.new
+  @puzzle  = Puzzle.new(solution: solution, scrambled_word: scrambled, hint_manager: hint_mgr)
+
+  # ask manager first
+  candidate = hint_mgr.respond_to?(:hint_for) ? hint_mgr.hint_for(@puzzle, attempts: stage) :
+              hint_mgr.respond_to?(:next_hint) ? hint_mgr.next_hint(@puzzle) :
+              nil
+
+  prev = session[:last_hint].to_s
+
+  # SAFETY NET: if manager returns nil or same as before, derive a stage-based hint
+  # (reveal first N letters; tweak to your style if needed)
+  if candidate.blank? || candidate == prev
+    revealed = solution.to_s[0, stage]
+    masked   = (solution.to_s[stage..] || "").gsub(/[A-Za-z]/, "•")
+    candidate = "#{revealed}#{masked}"
   end
+
+  @hint = candidate
+  session[:last_hint] = @hint
+
+  respond_to do |format|
+    format.turbo_stream   # <-- renders hint.turbo_stream.erb
+    format.html { render :alien_translation, status: :ok } # fallback
+  end
+end
+
 
   def create
-    solution  = session[:solution]
-    scrambled = session[:scrambled]
-    if solution.blank? || scrambled.blank?
-      redirect_to new_game_path, alert: "Started a fresh puzzle." and return
-    end
+  solution  = session[:solution]
+  scrambled = session[:scrambled]
+  return redirect_to(alien_translation_path, alert: "No active puzzle.") if solution.blank? || scrambled.blank?
 
-    repo      = ::Repositories::StaticWordRepository.new
-    scrambler = ::Scramblers::ShuffleScrambler.new
-    validator = ::Validators::ExactMatchValidator.new
-    hint_mgr  = ::Hints::ProgressiveHintManager.new
+  hint_mgr = ::Hints::ProgressiveHintManager.new
+  @puzzle  = Puzzle.new(solution: solution, scrambled_word: scrambled, hint_manager: hint_mgr)
 
-    service = GameService.new(
-      word_repository: repo,
-      scrambler: scrambler,
-      validator: validator,
-      hint_manager: hint_mgr
-    )
+  session[:attempts] = session[:attempts].to_i + 1
 
-    attempts = session[:attempts].to_i + 1
-    session[:attempts] = attempts
+  service = GameService.new(
+    word_repository: ::Repositories::StaticWordRepository.new,
+    scrambler: ::Scramblers::ShuffleScrambler.new,
+    validator: ::Validators::ExactMatchValidator.new,
+    hint_manager: hint_mgr
+  )
 
-    puzzle   = Puzzle.new(solution: solution, scrambled_word: scrambled, hint_manager: hint_mgr)
-    @puzzle  = puzzle
-
-    if service.check_attempt(puzzle, params[:attempt])
-      redirect_to alien_translation_path, notice: "Correct! The word was #{solution}."
-    else
-      @hint = service.get_hint(puzzle, attempts: attempts)
-      flash.now[:alert] = "Try again! Hint: #{@hint}"
-      render :new, status: :unprocessable_content
-    end
+  if service.check_attempt(@puzzle, params[:attempt])
+    redirect_to alien_translation_path, notice: "Correct! The word was #{solution}."
+  else
+    flash.now[:alert] = "Try again!"
+    @hint = session[:last_hint]      # <-- keep showing whatever hint was last revealed
+    render :alien_translation, status: :unprocessable_entity
   end
+  end
+
 end
