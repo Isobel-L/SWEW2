@@ -1,6 +1,5 @@
 <%= turbo_stream.update "hint" do %>
   <p><strong>Hint:</strong> <%= @hint.inspect %></p>
   <small style="opacity:.6">
-    stage=<%= Hints::SessionProgressStore.new(session).stage %>
   </small>
 <% end %>
