@@ -16,8 +16,8 @@ class AlienTranslationsController < ApplicationController
     session[:solution]    = @puzzle.solution
     session[:scrambled]   = @puzzle.scrambled_word
     session[:attempts]    = 0
-    session[:hint_stage]  = 0        # NEW
-    session[:last_hint]   = nil      # NEW
+    session[:hint_stage]  = 0
+    session[:last_hint]   = nil
   end
 
 def hint
@@ -52,8 +52,8 @@ def hint
   session[:last_hint] = @hint
 
   respond_to do |format|
-    format.turbo_stream   # <-- renders hint.turbo_stream.erb
-    format.html { render :alien_translation, status: :ok } # fallback
+    format.turbo_stream 
+    format.html { render :alien_translation, status: :ok } 
   end
 end
 
@@ -79,7 +79,7 @@ end
       redirect_to alien_translation_path, notice: "Correct! The word was #{solution}."
     else
       flash.now[:alert] = "Try again!"
-      @hint = session[:last_hint]      # <-- keep showing whatever hint was last revealed
+      @hint = session[:last_hint] 
       render :alien_translation, status: :unprocessable_entity
     end
   end
