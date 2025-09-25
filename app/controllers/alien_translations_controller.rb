@@ -38,7 +38,7 @@ class AlienTranslationsController < ApplicationController
 
     service = GameService.new(
       word_repository: ::Repositories::StaticWordRepository.new,
-      scrambler: ::Scramblers::ShuffleScrambler.new,
+      scrambler: ::AlienTranslations::Scramblers::ShuffleScrambler.new,
       validator: ::AlienTranslations::Validators::ExactMatchValidator.new,
       hint_manager: hint_mgr
     )

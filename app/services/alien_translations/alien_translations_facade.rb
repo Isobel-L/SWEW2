@@ -2,7 +2,7 @@ module AlienTranslations
   class AlienTranslationsFacade
     def initialize(session:,
                    repo:        ::Repositories::StaticWordRepository.new,
-                   scrambler:   ::Scramblers::ShuffleScrambler.new,
+                   scrambler:   ::AlienTranslations::Scramblers::ShuffleScrambler.new,
                    validator:   ::AlienTranslations::Validators::ExactMatchValidator.new,
                    hint_manager: ::Hints::ProgressiveHintManager.new)
       @session = session
