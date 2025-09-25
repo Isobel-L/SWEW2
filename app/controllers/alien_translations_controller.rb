@@ -10,11 +10,11 @@ class AlienTranslationsController < ApplicationController
     scrambled = session[:scrambled]
     return redirect_to(alien_translation_path, alert: "No active puzzle.") if solution.blank? || scrambled.blank?
 
-    store = Hints::SessionProgressStore.new(session)
+    store = ::AlienTranslations::Hints::SessionProgressStore.new(session)
     store.increment_stage!
     stage = store.stage
 
-    hint_mgr = ::Hints::ProgressiveHintManager.new
+    hint_mgr = ::AlienTranslations::Hints::ProgressiveHintManager.new
     @puzzle  = Puzzle.new(solution: solution, scrambled_word: scrambled, hint_manager: hint_mgr)
     @hint    = hint_mgr.hint_for(@puzzle, attempts: stage)
 
@@ -31,7 +31,7 @@ class AlienTranslationsController < ApplicationController
     scrambled = session[:scrambled]
     return redirect_to(alien_translation_path, alert: "No active puzzle.") if solution.blank? || scrambled.blank?
 
-    hint_mgr = ::Hints::ProgressiveHintManager.new
+    hint_mgr = ::AlienTranslations::Hints::ProgressiveHintManager.new
     @puzzle  = Puzzle.new(solution: solution, scrambled_word: scrambled, hint_manager: hint_mgr)
 
     session[:attempts] = session[:attempts].to_i + 1
@@ -47,7 +47,7 @@ class AlienTranslationsController < ApplicationController
       redirect_to alien_translation_path, notice: "Correct! The word was #{solution}."
     else
       flash.now[:alert] = "Try again!"
-      @hint = Hints::SessionProgressStore.new(session).last_hint
+      @hint = ::AlienTranslations::Hints::SessionProgressStore.new(session).last_hint
       render :alien_translation, status: :unprocessable_entity
     end
   end

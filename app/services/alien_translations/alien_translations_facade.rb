@@ -4,7 +4,7 @@ module AlienTranslations
                    repo:        ::Repositories::StaticWordRepository.new,
                    scrambler:   ::AlienTranslations::Scramblers::ShuffleScrambler.new,
                    validator:   ::AlienTranslations::Validators::ExactMatchValidator.new,
-                   hint_manager: ::Hints::ProgressiveHintManager.new)
+                   hint_manager: ::AlienTranslations::Hints::ProgressiveHintManager.new)
       @session = session
       @service = GameService.new(
         word_repository: repo,
@@ -12,7 +12,7 @@ module AlienTranslations
         validator:       validator,
         hint_manager:    hint_manager
       )
-      @store = ::Hints::SessionProgressStore.new(@session)
+      @store = ::AlienTranslations::Hints::SessionProgressStore.new(@session)
       @hint_manager = hint_manager
     end
 
