@@ -1,23 +1,56 @@
-<body style="background-color: rgb(67, 169, 198);">
-  <h1>Alien Translation</h1>
-  <p><strong>Scrambled:</strong> <%= (session[:scrambled] || @puzzle&.scrambled_word).to_s %></p>
-  <p><strong>Attempts:</strong> <%= session[:attempts].to_i %></p>
+<body style="background-color: rgb(161, 230, 251);">
+
+  <!-- Title -->
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <style>
+      .game-title {
+        text-align: center;
+        font-family: 'Bangers', cursive;
+        font-size: 128px;
+        background: linear-gradient(to bottom, #ffcc00, #ff3300);
+        text-shadow: 3px 3px 0 #ffffff, 
+                     -3px -3px 0 #5cfaf5,
+                      3px -3px 0 #41f2ec,
+                     -3px  3px 0 #69edf9;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <h1 class="game-title">Alien Translations</h1>
+
+  <p>
+    <strong>Scrambled:</strong>
+    <%= (session[:scrambled] || @puzzle&.scrambled_word).to_s %>
+  </p>
+
+  <p>
+    <strong>Attempts:</strong>
+    <%= session[:attempts].to_i %>
+  </p>
+
   <%= form_with url: alien_translation_path, method: :post, local: true do |f| %>
     <%= f.label :attempt, "Your guess:" %>
     <%= f.text_field :attempt, autofocus: true %>
     <%= f.submit "Check" %>
   <% end %>
+
   <%= button_to "Get a Hint", alien_translation_hint_path, method: :post %>
+
   <% if flash[:notice].present? %>
     <p style="color: green"><%= flash[:notice] %></p>
   <% end %>
+
   <% if flash[:alert].present? %>
     <p style="color: rgb(4, 0, 255)"><%= flash[:alert] %></p>
   <% end %>
+
   <!-- HINT AREA -->
   <div id="hint">
     <% if @hint.present? %>
       <p><strong>Hint:</strong> <%= @hint %></p>
     <% end %>
   </div>
+
 </body>
