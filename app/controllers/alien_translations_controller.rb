@@ -6,20 +6,10 @@ class AlienTranslationsController < ApplicationController
   end
 
   def hint
-    solution  = session[:solution]
-    scrambled = session[:scrambled]
-    return redirect_to(alien_translation_path, alert: "No active puzzle.") if solution.blank? || scrambled.blank?
-
-    store = ::AlienTranslations::Hints::SessionProgressStore.new(session)
-    store.increment_stage!
-    stage = store.stage
-
-    hint_mgr = ::AlienTranslations::Hints::ProgressiveHintManager.new
-    @puzzle  = Puzzle.new(solution: solution, scrambled_word: scrambled, hint_manager: hint_mgr)
-    @hint    = hint_mgr.hint_for(@puzzle, attempts: stage)
-
-    store.last_hint = @hint
-
+    return redirect_to(alien_translation_path, alert: "No active puzzle.") if session[:solution].blank? || session[:scrambled].blank?
+    facade  = AlienTranslations::AlienTranslationsFacade.new(session: session)
+    @hint   = facade.next_hint!
+    @puzzle = facade.current_puzzle  
     respond_to do |format|
       format.turbo_stream
       format.html { render :alien_translation, status: :ok }
