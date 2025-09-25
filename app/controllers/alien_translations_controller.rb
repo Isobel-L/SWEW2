@@ -36,7 +36,7 @@ class AlienTranslationsController < ApplicationController
 
     session[:attempts] = session[:attempts].to_i + 1
 
-    service = GameService.new(
+    service = ::AlienTranslations::GameService.new(
       word_repository: ::Repositories::StaticWordRepository.new,
       scrambler: ::AlienTranslations::Scramblers::ShuffleScrambler.new,
       validator: ::AlienTranslations::Validators::ExactMatchValidator.new,

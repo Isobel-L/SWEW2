@@ -6,7 +6,7 @@ module AlienTranslations
                    validator:   ::AlienTranslations::Validators::ExactMatchValidator.new,
                    hint_manager: ::AlienTranslations::Hints::ProgressiveHintManager.new)
       @session = session
-      @service = GameService.new(
+      @service = ::AlienTranslations::GameService.new(
         word_repository: repo,
         scrambler:       scrambler,
         validator:       validator,
