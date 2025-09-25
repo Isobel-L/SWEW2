@@ -9,22 +9,109 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <!-- Bootstrap CSS (no SRI for now) -->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <!-- Google Font used for arcade-style headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+
+    <style>
+      /* Lock the viewport and prevent scrollbars */
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* Global background gradient (applies site-wide) */
+      body {
+        background: linear-gradient(to bottom, #000000, #0a1a3c, #004080, #0091ff);
+      }
+
+      /* Starfield container lives in the layout so it persists across page loads */
+      #stars {
+        position: absolute;
+        top: 55px;                 /* offset below fixed header */
+        left: 0;
+        width: 100%;
+        height: calc(100% - 55px);
+        pointer-events: none;      /* do not block user input */
+        z-index: 0;
+      }
+
+      /* Base style for each generated star */
+      .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: #ffffff;
+        border-radius: 50%;
+        animation: twinkle 2s infinite alternate;
+      }
+
+      @keyframes twinkle {
+        from { opacity: 0.25; }
+        to   { opacity: 1; }
+      }
+
+      /* Page content always sits above the starfield */
+      main.content {
+        position: relative;
+        z-index: 1;
+      }
+    </style>
 
     <%= yield :head %>
   </head>
+
   <body>
+    <!-- Global site header -->
     <%= render "home/header" %>
-    <div class="container">
+
+    <!-- Starfield background (not replaced by Turbo) -->
+    <div id="stars"></div>
+
+    <!-- Main page content -->
+    <main class="container content">
       <br/>
       <%= yield %>
-    </div>
+    </main>
 
-    <!-- jQuery + Bootstrap bundle (includes Popper) -->
+    <!-- jQuery + Bootstrap bundle -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Importmap (Rails 7/8) -->
     <%= javascript_importmap_tags %>
+
+    <script>
+      // Build or rebuild the starfield; safe to call multiple times.
+      function initStars() {
+        const container = document.getElementById('stars');
+        if (!container) return;
+
+        const starCount = 2000;
+        const maxWidth = document.documentElement.clientWidth;
+        const maxHeight = window.innerHeight - 55;
+
+        container.innerHTML = ''; // clear existing stars
+
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement('div');
+          star.className = 'star';
+          star.style.left = Math.random() * maxWidth + 'px';
+          star.style.top = Math.random() * maxHeight + 'px';
+          star.style.animationDelay = (Math.random() * 5).toFixed(2) + 's';
+          container.appendChild(star);
+        }
+      }
+
+      // Initialize on full page load, Turbo load, and resize.
+      document.addEventListener('DOMContentLoaded', initStars);
+      document.addEventListener('turbo:load', initStars);
+      window.addEventListener('resize', initStars);
+    </script>
   </body>
 </html>
