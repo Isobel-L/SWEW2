@@ -3,7 +3,7 @@ module AlienTranslations
     def initialize(session:,
                    repo:        ::Repositories::StaticWordRepository.new,
                    scrambler:   ::Scramblers::ShuffleScrambler.new,
-                   validator:   ::Validators::ExactMatchValidator.new,
+                   validator:   ::AlienTranslations::Validators::ExactMatchValidator.new,
                    hint_manager: ::Hints::ProgressiveHintManager.new)
       @session = session
       @service = GameService.new(
