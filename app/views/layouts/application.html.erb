@@ -16,6 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
 
     <style>
+      /* Lock the viewport and prevent scrollbars */
       html, body {
         margin: 0;
         padding: 0;
@@ -24,10 +25,12 @@
         overflow: hidden;
       }
 
+      /* Global background gradient */
       body {
         background: linear-gradient(to bottom, #000000, #0a1a3c, #004080, #0091ff);
       }
 
+      /* Starfield container */
       #stars {
         position: absolute;
         top: 55px;
@@ -38,6 +41,7 @@
         z-index: 0;
       }
 
+      /* Individual star appearance */
       .star {
         position: absolute;
         width: 2px;
@@ -52,6 +56,7 @@
         to   { opacity: 1; }
       }
 
+      /* Page content sits above stars */
       main.content {
         position: relative;
         z-index: 1;
@@ -62,18 +67,19 @@
   </head>
 
   <body>
+    <!-- Global site header -->
     <%= render "home/header" %>
 
-    <!-- Starfield -->
+    <!-- Starfield background -->
     <div id="stars"></div>
 
-    <!-- Main content -->
+    <!-- Main content area -->
     <main class="container content">
       <br/>
       <%= yield %>
     </main>
 
-    <!-- Audio elements for feedback -->
+    <!-- Audio elements -->
     <audio id="click-sound" src="<%= asset_path('mouse_click.mp3') %>"></audio>
     <audio id="win-sound" src="<%= asset_path('Winning_an_extra_bonus.wav') %>"></audio>
 
@@ -84,12 +90,12 @@
     <%= javascript_importmap_tags %>
 
     <script>
-      // Build starfield
+      // Build the starfield
       function initStars() {
         const container = document.getElementById('stars');
         if (!container) return;
 
-        const starCount = 600;
+        const starCount = 2000;
         const maxWidth = document.documentElement.clientWidth;
         const maxHeight = window.innerHeight - 55;
 
@@ -125,7 +131,7 @@
       document.addEventListener('DOMContentLoaded', attachButtonSounds);
       document.addEventListener('turbo:load', attachButtonSounds);
 
-      // Play "win" sound if flash notice contains a success message
+      // Play win sound if notice contains "Correct!"
       document.addEventListener('turbo:load', () => {
         const notice = document.querySelector('[style*="lightgreen"]');
         const winAudio = document.getElementById('win-sound');

@@ -1,22 +1,19 @@
-<%# Page-specific styles kept local to this view %>
+<!-- app/views/alien_translations/alien_translation.html.erb -->
 <style>
-  /* Arcade title styling with cross-browser text clipping */
+  /* Arcade title with gradient fill and cross-browser clipping */
   .game-title {
     text-align: center;
     font-family: 'Bangers', cursive;
     font-size: 128px;
 
-    /* Fallback color if clipping is unsupported */
-    color: #ffffff;
+    color: #ffffff; /* fallback color */
 
-    /* Gradient fill (gets overriden by the background gradient so this line is redundent) */
     background: linear-gradient(to bottom, #ffcc00, #ff3300);
 
-    /* Cross-browser clipping */
-    -webkit-background-clip: text;  /* Chrome/Safari */
-    background-clip: text;          /* Standard */
-    -webkit-text-fill-color: transparent; /* Chrome/Safari */
-    color: transparent;                     /* Firefox */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
 
     text-shadow: 3px 3px 0 #ffffff,
                  -3px -3px 0 #5cfaf5,
@@ -27,27 +24,24 @@
     margin-bottom: 120px;
   }
 
-  /* Center and standardize text for this page */
+  /* Wrapper for all content */
   .page-wrap {
     text-align: center;
     color: #ffffff;
     font-family: Arial, sans-serif;
   }
 
-  /* Ensure inputs are readable while typing */
-  .page-wrap input[type="text"],
-  .page-wrap input[type="search"],
-  .page-wrap input[type="password"],
-  .page-wrap input[type="email"] {
+  /* Input styling */
+  .page-wrap input[type="text"] {
     background-color: #ffffff;
-    color: #000000;                  /* force black text at all times */
+    color: #000000;
     border: 2px solid #000000;
     padding: 6px 8px;
     border-radius: 4px;
     font-size: 18px;
   }
 
-  /* Buttons consistent with your current palette */
+  /* Buttons */
   .page-wrap input[type="submit"],
   .page-wrap button {
     background-color: rgb(242, 96, 70);
@@ -66,7 +60,7 @@
     border-color: #000000;
   }
 
-  /* Paragraphs and labels readable on dark bg */
+  /* Text elements */
   .page-wrap p,
   .page-wrap label {
     font-size: 18px;
@@ -79,14 +73,12 @@
   <p><strong>Scrambled:</strong> <%= (session[:scrambled] || @puzzle&.scrambled_word).to_s %></p>
   <p><strong>Attempts:</strong> <%= session[:attempts].to_i %></p>
 
-  <%# Opt out of Turbo so the page does a full HTML submit (avoids stream replace) %>
   <%= form_with url: alien_translation_path, method: :post, local: true, data: { turbo: false } do |f| %>
     <%= f.label :attempt, "Your guess:" %>
     <%= f.text_field :attempt, autofocus: true %>
     <%= f.submit "Check" %>
   <% end %>
 
-  <%# button_to generates its own <form>; disable Turbo there as well %>
   <%= button_to "Get a Hint", alien_translation_hint_path, method: :post, form: { data: { turbo: false } } %>
 
   <% if flash[:notice].present? %>
