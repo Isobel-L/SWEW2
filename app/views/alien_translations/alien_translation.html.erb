@@ -1,3 +1,4 @@
+<!-- app/views/alien_translations/alien_translation.html.erb -->
 <style>
   /* Arcade title with gradient fill and cross-browser clipping */
   .game-title {
@@ -15,7 +16,7 @@
                   3px -3px 0 #41f2ec,
                  -3px  3px 0 #69edf9;
     margin-top: 20px;
-    margin-bottom: 120px;
+    margin-bottom: 80px;
   }
 
   /* Wrapper for all content */
@@ -25,13 +26,13 @@
     font-family: Arial, sans-serif;
   }
 
-  /* Input styling */
+  /* Inputs */
   .page-wrap input[type="text"] {
     background-color: #ffffff;
     color: #000000;
     border: 2px solid #000000;
     padding: 6px 8px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 18px;
   }
 
@@ -44,39 +45,73 @@
     border: 2px solid #000000;
     padding: 8px 16px;
     font-size: 16px;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform .05s ease;
     text-decoration: none;
   }
-
   .page-wrap button:not(.btn):hover,
   .page-wrap input[type="submit"]:not(.btn):hover,
   .page-wrap a.btn:not(.btn):hover {
     background-color: #629deb;
     border-color: #000000;
   }
+  .page-wrap button:not(.btn):active,
+  .page-wrap input[type="submit"]:not(.btn):active {
+    transform: translateY(1px);
+  }
 
+  /* Bootstrap button active ring */
   .btn-group .btn.active {
     filter: brightness(0.92);
     outline: 2px solid #000;
   }
 
-  /* Text elements */
+  /* Text sizes */
   .page-wrap p,
   .page-wrap label {
     font-size: 18px;
+  }
+
+  /* CURRENT DIFFICULTY badge */
+  #current-difficulty {
+    display: block;                 /* forces next line */
+    width: fit-content;
+    margin: 10px auto 6px;          /* center it */
+    padding: 8px 14px;
+    border-radius: 999px;           /* pill */
+    font-weight: 800;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0 #000;
+    border: 2px solid #000;
+    box-shadow: 0 6px 0 rgba(0,0,0,.25);
+    backdrop-filter: blur(2px);
+  }
+  /* Colour by difficulty */
+  #current-difficulty.difficulty-easy {
+    background: rgba(40,167,69,.2);
+    color: #9ef7b1;
+    border-color: #1b5e20;
+  }
+  #current-difficulty.difficulty-normal {
+    background: rgba(0,123,255,.2);
+    color: #b6d8ff;
+    border-color: #0d47a1;
+  }
+  #current-difficulty.difficulty-hard {
+    background: rgba(220,53,69,.2);
+    color: #ffb3b8;
+    border-color: #7f1d1d;
   }
 </style>
 
 <div class="page-wrap">
   <h1 class="game-title">Alien Translations</h1>
 
-  <!-- Difficulty buttons -->
-  <div id="difficulty-buttons">
-    <%= render "alien_translations/difficulty_buttons",
-               locals: { difficulty: (session[:difficulty] || :normal).to_sym } %>
-  </div>
+  <!-- Render the partial directly; it contains the #difficulty-buttons wrapper -->
+  <%= render "alien_translations/difficulty_buttons",
+             locals: { difficulty: (session[:difficulty] || :normal).to_sym } %>
 
   <!-- Puzzle section -->
   <%= render partial: "alien_translations/game_content",
