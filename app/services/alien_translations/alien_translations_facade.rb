@@ -5,7 +5,6 @@ module AlienTranslations
                    scrambler:    ::AlienTranslations::Scramblers::FisherYatesScrambler.new,
                    validator:    ::AlienTranslations::Validators::ExactMatchValidator.new,
                    hint_manager: ::AlienTranslations::Hints::ProgressiveHintManager.new)
-
       @session = session
 
       strategies = {
@@ -16,10 +15,10 @@ module AlienTranslations
       scramble_service = ::AlienTranslations::ScrambleService.new(strategies: strategies, default: :normal)
 
       @service = ::AlienTranslations::GameService.new(
-        word_repository: repo,
+        word_repository:  repo,
         scramble_service: scramble_service,
-        validator:       validator,
-        hint_manager:    hint_manager
+        validator:        validator,
+        hint_manager:     hint_manager
       )
 
       @store        = ::AlienTranslations::Hints::SessionProgressStore.new(@session)
@@ -29,20 +28,7 @@ module AlienTranslations
     def start_new_puzzle!(difficulty: :normal)
       @store.reset!
       @session[:attempts] = 0
-
       puzzle = @service.generate_puzzle(difficulty: difficulty)
-
-      @session[:solution]  = puzzle.solution
-      @session[:scrambled] = puzzle.scrambled_word
-      puzzle
-    end
-
-    def start_new_puzzle!(difficulty: :normal)
-      @store.reset!
-      @session[:attempts] = 0
-
-      puzzle = @service.generate_puzzle(difficulty: difficulty)
-
       @session[:solution]  = puzzle.solution
       @session[:scrambled] = puzzle.scrambled_word
       puzzle
@@ -70,6 +56,10 @@ module AlienTranslations
 
     def last_hint
       @store.last_hint
+    end
+
+    def hints_used
+      @store.stage.to_i
     end
   end
 end

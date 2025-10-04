@@ -4,42 +4,42 @@ class AlienTranslationsController < ApplicationController
   ALLOWED_DIFFICULTIES = %i[easy normal hard].freeze
 
   def change_difficulty
-  difficulty = normalised_difficulty(params[:difficulty]) || :normal
-  session[:difficulty] = difficulty
+    difficulty = normalised_difficulty(params[:difficulty]) || :normal
+    session[:difficulty] = difficulty
 
-  facade = AlienTranslations::AlienTranslationsFacade.new(session: session)
+    facade  = AlienTranslations::AlienTranslationsFacade.new(session: session)
+    @puzzle = facade.start_new_puzzle!(difficulty: difficulty)
+    @hint   = nil
 
-  @puzzle = facade.start_new_puzzle!(difficulty: difficulty)
-  @hint   = nil
-  session[:attempts] = 0
-
-  respond_to do |format|
-    format.turbo_stream do
-      render turbo_stream: [
-        turbo_stream.replace(
-          "difficulty-buttons",
-          partial: "alien_translations/difficulty_buttons",
-          locals: { difficulty: difficulty }
-        ),
-        turbo_stream.replace(
-          "game-container",
-          partial: "alien_translations/game_content",
-          locals: { puzzle: @puzzle, hint: @hint, difficulty: difficulty }
-        )
-      ]
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace(
+            "difficulty-buttons",
+            partial: "alien_translations/difficulty_buttons",
+            locals: { difficulty: difficulty }
+          ),
+          turbo_stream.replace(
+            "game-container",
+            partial: "alien_translations/game_content",
+            locals: { puzzle: @puzzle, hint: @hint, difficulty: difficulty }
+          )
+        ]
+      end
+      format.html { redirect_to alien_translation_path }
     end
-
-    format.html { redirect_to alien_translation_path }
   end
-end
-
-
 
   def alien_translation
     difficulty = normalised_difficulty(params[:difficulty]) || session[:difficulty] || :normal
     session[:difficulty] = difficulty
 
-    @puzzle = @facade.start_new_puzzle!(difficulty: difficulty)
+    session[:run_score] ||= 0
+    @run_score  = session[:run_score].to_i
+    @puzzle     = @facade.start_new_puzzle!(difficulty: difficulty)
+    @best_score = score_store.best_score
+    @last_score = session[:last_score]
+
     render :alien_translation
   end
 
@@ -61,12 +61,45 @@ end
     correct = @facade.submit_guess!(params[:attempt])
 
     if correct
-      redirect_to alien_translation_path, notice: "Correct! The word was #{session[:solution]}."
+      diff      = (session[:difficulty] || :normal).to_sym
+      attempts  = session[:attempts].to_i
+      hints     = @facade.hints_used.to_i
+      gained    = word_score(diff, attempts, hints)
+
+      session[:last_score] = gained
+      session[:run_score]  = session[:run_score].to_i + gained
+
+      prev_best = score_store.best_score
+      best      = score_store.record!(session[:run_score].to_i)
+      @new_best = prev_best.nil? || best > prev_best
+
+      @best_score = best
+      @last_score = gained
+      @run_score  = session[:run_score].to_i
+      @hint       = nil
+      @puzzle     = @facade.start_new_puzzle!(difficulty: diff)
+
+      respond_to do |format|
+        format.turbo_stream { render :create }
+        format.html do
+          redirect_to alien_translation_path,
+                      notice: "Correct! Score +#{gained}. Run #{@run_score}. Best #{best}."
+        end
+      end
     else
-      flash.now[:alert] = "Try again!"
-      @puzzle = @facade.current_puzzle
-      @hint   = @facade.last_hint
-      render :alien_translation, status: :unprocessable_entity
+      session[:run_score] = 0
+      @run_score  = 0
+      @new_best   = false
+      flash.now[:alert] = "Wrong! Run reset."
+      @puzzle     = @facade.current_puzzle
+      @hint       = @facade.last_hint
+      @best_score = score_store.best_score
+      @last_score = session[:last_score]
+
+      respond_to do |format|
+        format.turbo_stream { render :create }
+        format.html { render :alien_translation, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -84,5 +117,23 @@ end
     return nil if value.blank?
     sym = value.to_s.downcase.to_sym
     ALLOWED_DIFFICULTIES.include?(sym) ? sym : :normal
+  end
+
+  def score_store
+    @score_store ||= HighScores::FileBackedStore.new(session: session, cookies: cookies)
+  end
+
+  def word_score(difficulty, attempts, hints)
+    base =
+      case difficulty
+      when :easy   then 500
+      when :normal then 1000
+      when :hard   then 1500
+      else               750
+      end
+    attempt_penalty = [attempts - 1, 0].max * 150
+    raw = [base - attempt_penalty, 0].max
+    factor = (0.4 ** hints.to_i)
+    (raw * factor).floor
   end
 end

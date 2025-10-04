@@ -1,8 +1,17 @@
 <div id="game-container">
+  <% max_stars = 5
+     attempts  = session[:attempts].to_i
+     filled    = [[max_stars - (attempts - 1), 1].max, max_stars].min
+  %>
+  <div id="stars" style="font-size:28px;letter-spacing:2px;margin:8px 0 12px;">
+    <span style="color:#ffd700;text-shadow:0 0 6px rgba(255,215,0,.7)"><%= "★" * filled %></span>
+    <span style="color:rgba(255,255,255,.25)"><%= "☆" * (max_stars - filled) %></span>
+  </div>
+
   <p><strong>Scrambled:</strong> <%= (session[:scrambled] || puzzle.scrambled_word).to_s %></p>
   <p><strong>Attempts:</strong> <%= session[:attempts].to_i %></p>
 
-  <%= form_with url: alien_translation_path, method: :post, local: true, data: { turbo: false } do |f| %>
+  <%= form_with url: alien_translation_path, method: :post do |f| %>
     <%= f.label :attempt, "Your guess:" %>
     <%= f.text_field :attempt, autofocus: true %>
     <%= f.submit "Check" %>
@@ -10,7 +19,7 @@
 
   <%= button_to "Get a Hint", alien_translation_hint_path,
                 method: :post,
-                form: { data: { turbo: true } } %>
+                form: { data: { turbo_stream: true } } %>
 
   <% if flash[:notice].present? %>
     <p style="color: lightgreen"><%= flash[:notice] %></p>
