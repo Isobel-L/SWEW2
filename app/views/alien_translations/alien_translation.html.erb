@@ -1,25 +1,19 @@
-<!-- app/views/alien_translations/alien_translation.html.erb -->
 <style>
   /* Arcade title with gradient fill and cross-browser clipping */
   .game-title {
     text-align: center;
     font-family: 'Bangers', cursive;
     font-size: 128px;
-
     color: #ffffff; /* fallback color */
-
     background: linear-gradient(to bottom, #ffcc00, #ff3300);
-
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-
     text-shadow: 3px 3px 0 #ffffff,
                  -3px -3px 0 #5cfaf5,
                   3px -3px 0 #41f2ec,
                  -3px  3px 0 #69edf9;
-
     margin-top: 20px;
     margin-bottom: 120px;
   }
@@ -41,9 +35,10 @@
     font-size: 18px;
   }
 
-  /* Buttons */
-  .page-wrap input[type="submit"],
-  .page-wrap button {
+  /* Buttons (only non-Bootstrap ones get custom styling) */
+  .page-wrap button:not(.btn),
+  .page-wrap input[type="submit"]:not(.btn),
+  .page-wrap a.btn:not(.btn) {
     background-color: rgb(242, 96, 70);
     color: #ffffff;
     border: 2px solid #000000;
@@ -52,12 +47,19 @@
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    text-decoration: none;
   }
 
-  .page-wrap input[type="submit"]:hover,
-  .page-wrap button:hover {
+  .page-wrap button:not(.btn):hover,
+  .page-wrap input[type="submit"]:not(.btn):hover,
+  .page-wrap a.btn:not(.btn):hover {
     background-color: #629deb;
     border-color: #000000;
+  }
+
+  .btn-group .btn.active {
+    filter: brightness(0.92);
+    outline: 2px solid #000;
   }
 
   /* Text elements */
@@ -70,42 +72,36 @@
 <div class="page-wrap">
   <h1 class="game-title">Alien Translations</h1>
 
-  <div class="btn-group mb-3" role="group" aria-label="Difficulty">
-    <%= link_to "Easy",
-                alien_translation_path(difficulty: :easy),
-                class: "btn btn-success #{'active' if session[:difficulty] == 'easy'}" %>
-  
-    <%= link_to "Normal",
-                alien_translation_path(difficulty: :normal),
-                class: "btn btn-primary #{'active' if session[:difficulty] == 'normal'}" %>
-  
-    <%= link_to "Hard",
-                alien_translation_path(difficulty: :hard),
-                class: "btn btn-danger #{'active' if session[:difficulty] == 'hard'}" %>
+  <!-- Difficulty buttons -->
+  <div id="difficulty-buttons">
+    <%= render "alien_translations/difficulty_buttons",
+               locals: { difficulty: (session[:difficulty] || :normal).to_sym } %>
   </div>
 
-  <p><strong>Scrambled:</strong> <%= (session[:scrambled] || @puzzle&.scrambled_word).to_s %></p>
-  <p><strong>Attempts:</strong> <%= session[:attempts].to_i %></p>
-
-  <%= form_with url: alien_translation_path, method: :post, local: true, data: { turbo: false } do |f| %>
-    <%= f.label :attempt, "Your guess:" %>
-    <%= f.text_field :attempt, autofocus: true %>
-    <%= f.submit "Check" %>
-  <% end %>
-
-  <%= button_to "Get a Hint", alien_translation_hint_path, method: :post, form: { data: { turbo: false } } %>
-
-  <% if flash[:notice].present? %>
-    <p style="color: lightgreen"><%= flash[:notice] %></p>
-  <% end %>
-
-  <% if flash[:alert].present? %>
-    <p style="color: #ff8080"><%= flash[:alert] %></p>
-  <% end %>
-
-  <div id="hint">
-    <% if @hint.present? %>
-      <p><strong>Hint:</strong> <%= @hint %></p>
-    <% end %>
-  </div>
+  <!-- Puzzle section -->
+  <%= render partial: "alien_translations/game_content",
+             locals: { puzzle: @puzzle, hint: @hint, difficulty: session[:difficulty] } %>
 </div>
+
+<!-- Sound effect -->
+<audio id="click-sound" preload="auto">
+  <source src="<%= asset_path('mouse_click.mp3') %>" type="audio/mpeg">
+</audio>
+
+<script>
+  function attachDifficultySound() {
+    const clickSound = document.getElementById("click-sound");
+    document.querySelectorAll('.btn-group form').forEach(form => {
+      form.addEventListener('submit', () => {
+        if (clickSound) {
+          clickSound.currentTime = 0;
+          clickSound.play().catch(() => {});
+        }
+      });
+    });
+  }
+
+  document.addEventListener("turbo:load", attachDifficultySound);
+  document.addEventListener("turbo:render", attachDifficultySound);
+  document.addEventListener("turbo:frame-load", attachDifficultySound);
+</script>

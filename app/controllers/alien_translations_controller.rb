@@ -3,6 +3,38 @@ class AlienTranslationsController < ApplicationController
 
   ALLOWED_DIFFICULTIES = %i[easy normal hard].freeze
 
+  def change_difficulty
+  difficulty = normalised_difficulty(params[:difficulty]) || :normal
+  session[:difficulty] = difficulty
+
+  facade = AlienTranslations::AlienTranslationsFacade.new(session: session)
+
+  @puzzle = facade.start_new_puzzle!(difficulty: difficulty)
+  @hint   = nil
+  session[:attempts] = 0
+
+  respond_to do |format|
+    format.turbo_stream do
+      render turbo_stream: [
+        turbo_stream.replace(
+          "difficulty-buttons",
+          partial: "alien_translations/difficulty_buttons",
+          locals: { difficulty: difficulty }
+        ),
+        turbo_stream.replace(
+          "game-container",
+          partial: "alien_translations/game_content",
+          locals: { puzzle: @puzzle, hint: @hint, difficulty: difficulty }
+        )
+      ]
+    end
+
+    format.html { redirect_to alien_translation_path }
+  end
+end
+
+
+
   def alien_translation
     difficulty = normalised_difficulty(params[:difficulty]) || session[:difficulty] || :normal
     session[:difficulty] = difficulty

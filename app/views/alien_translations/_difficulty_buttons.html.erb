@@ -1,0 +1,21 @@
+<% current = (local_assigns[:difficulty] || session[:difficulty] || :normal).to_sym %>
+
+<div class="btn-group mb-3" role="group" aria-label="Difficulty">
+  <%= button_to "Easy",
+      change_difficulty_alien_translation_path(difficulty: :easy),
+      method: :post,
+      form: { data: { turbo_stream: true } },
+      class: "btn btn-success #{'active' if current == :easy}" %>
+
+  <%= button_to "Normal",
+      change_difficulty_alien_translation_path(difficulty: :normal),
+      method: :post,
+      form: { data: { turbo_stream: true } },
+      class: "btn btn-primary #{'active' if current == :normal}" %>
+
+  <%= button_to "Hard",
+      change_difficulty_alien_translation_path(difficulty: :hard),
+      method: :post,
+      form: { data: { turbo_stream: true } },
+      class: "btn btn-danger #{'active' if current == :hard}" %>
+</div>
