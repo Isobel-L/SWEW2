@@ -1,6 +1,6 @@
 module AlienTranslations
   module Scramblers
-    class ShuffleScrambler < Scrambler
+    class FisherYatesScrambler < Scrambler
       def scramble(word) = word.chars.shuffle.join
     end
   end

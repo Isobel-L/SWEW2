@@ -2,7 +2,7 @@ module AlienTranslations
   class AlienTranslationsFacade
     def initialize(session:,
                    repo:         ::Repositories::StaticWordRepository.new,
-                   scrambler:    ::AlienTranslations::Scramblers::ShuffleScrambler.new,
+                   scrambler:    ::AlienTranslations::Scramblers::FisherYatesScrambler.new,
                    validator:    ::AlienTranslations::Validators::ExactMatchValidator.new,
                    hint_manager: ::AlienTranslations::Hints::ProgressiveHintManager.new)
 
@@ -10,7 +10,7 @@ module AlienTranslations
 
       strategies = {
         easy:   AlienTranslations::Scramblers::SwapScrambler.new,
-        normal: AlienTranslations::Scramblers::ShuffleScrambler.new,
+        normal: AlienTranslations::Scramblers::FisherYatesScrambler.new,
         hard:   AlienTranslations::Scramblers::PhoneticScrambler.new
       }
       scramble_service = ::AlienTranslations::ScrambleService.new(strategies: strategies, default: :normal)
