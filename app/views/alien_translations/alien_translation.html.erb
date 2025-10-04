@@ -70,6 +70,20 @@
 <div class="page-wrap">
   <h1 class="game-title">Alien Translations</h1>
 
+  <div class="btn-group mb-3" role="group" aria-label="Difficulty">
+    <%= link_to "Easy",
+                alien_translation_path(difficulty: :easy),
+                class: "btn btn-success #{'active' if session[:difficulty] == 'easy'}" %>
+  
+    <%= link_to "Normal",
+                alien_translation_path(difficulty: :normal),
+                class: "btn btn-primary #{'active' if session[:difficulty] == 'normal'}" %>
+  
+    <%= link_to "Hard",
+                alien_translation_path(difficulty: :hard),
+                class: "btn btn-danger #{'active' if session[:difficulty] == 'hard'}" %>
+  </div>
+
   <p><strong>Scrambled:</strong> <%= (session[:scrambled] || @puzzle&.scrambled_word).to_s %></p>
   <p><strong>Attempts:</strong> <%= session[:attempts].to_i %></p>
 

@@ -1,26 +1,48 @@
 module AlienTranslations
   class AlienTranslationsFacade
     def initialize(session:,
-                   repo:        ::Repositories::StaticWordRepository.new,
-                   scrambler:   ::AlienTranslations::Scramblers::ShuffleScrambler.new,
-                   validator:   ::AlienTranslations::Validators::ExactMatchValidator.new,
+                   repo:         ::Repositories::StaticWordRepository.new,
+                   scrambler:    ::AlienTranslations::Scramblers::ShuffleScrambler.new,
+                   validator:    ::AlienTranslations::Validators::ExactMatchValidator.new,
                    hint_manager: ::AlienTranslations::Hints::ProgressiveHintManager.new)
+
       @session = session
+
+      strategies = {
+        easy:   AlienTranslations::Scramblers::SwapScrambler.new,
+        normal: AlienTranslations::Scramblers::ShuffleScrambler.new,
+        hard:   AlienTranslations::Scramblers::PhoneticScrambler.new
+      }
+      scramble_service = ::AlienTranslations::ScrambleService.new(strategies: strategies, default: :normal)
+
       @service = ::AlienTranslations::GameService.new(
         word_repository: repo,
-        scrambler:       scrambler,
+        scramble_service: scramble_service,
         validator:       validator,
         hint_manager:    hint_manager
       )
-      @store = ::AlienTranslations::Hints::SessionProgressStore.new(@session)
+
+      @store        = ::AlienTranslations::Hints::SessionProgressStore.new(@session)
       @hint_manager = hint_manager
     end
 
-    def start_new_puzzle!
+    def start_new_puzzle!(difficulty: :normal)
       @store.reset!
       @session[:attempts] = 0
 
-      puzzle = @service.generate_puzzle
+      puzzle = @service.generate_puzzle(difficulty: difficulty)
+
+      @session[:solution]  = puzzle.solution
+      @session[:scrambled] = puzzle.scrambled_word
+      puzzle
+    end
+
+    def start_new_puzzle!(difficulty: :normal)
+      @store.reset!
+      @session[:attempts] = 0
+
+      puzzle = @service.generate_puzzle(difficulty: difficulty)
+
       @session[:solution]  = puzzle.solution
       @session[:scrambled] = puzzle.scrambled_word
       puzzle
