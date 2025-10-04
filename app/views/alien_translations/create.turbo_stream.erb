@@ -5,13 +5,6 @@
   </p>
 <% end %>
 
-<%= turbo_stream.replace "last-score" do %>
-  <p id="last-score">
-    Last Score:
-    <span class="value"><%= @last_score.present? ? @last_score : "—" %></span>
-  </p>
-<% end %>
-
 <%= turbo_stream.replace "run-score" do %>
   <p id="run-score">
     Run Score:

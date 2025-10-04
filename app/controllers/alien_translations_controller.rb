@@ -38,7 +38,6 @@ class AlienTranslationsController < ApplicationController
     @run_score  = session[:run_score].to_i
     @puzzle     = @facade.start_new_puzzle!(difficulty: difficulty)
     @best_score = score_store.best_score
-    @last_score = session[:last_score]
 
     render :alien_translation
   end
@@ -66,7 +65,6 @@ class AlienTranslationsController < ApplicationController
       hints     = @facade.hints_used.to_i
       gained    = word_score(diff, attempts, hints)
 
-      session[:last_score] = gained
       session[:run_score]  = session[:run_score].to_i + gained
 
       prev_best = score_store.best_score
@@ -74,7 +72,6 @@ class AlienTranslationsController < ApplicationController
       @new_best = prev_best.nil? || best > prev_best
 
       @best_score = best
-      @last_score = gained
       @run_score  = session[:run_score].to_i
       @hint       = nil
       @puzzle     = @facade.start_new_puzzle!(difficulty: diff)
@@ -83,18 +80,17 @@ class AlienTranslationsController < ApplicationController
         format.turbo_stream { render :create }
         format.html do
           redirect_to alien_translation_path,
-                      notice: "Correct! Score +#{gained}. Run #{@run_score}. Best #{best}."
+                      notice: "Correct! +#{gained} points. Run #{@run_score}. Best #{best}."
         end
       end
     else
       session[:run_score] = 0
       @run_score  = 0
       @new_best   = false
-      flash.now[:alert] = "Wrong! Run reset."
       @puzzle     = @facade.current_puzzle
       @hint       = @facade.last_hint
       @best_score = score_store.best_score
-      @last_score = session[:last_score]
+      flash.now[:alert] = "Wrong! Run reset."
 
       respond_to do |format|
         format.turbo_stream { render :create }
