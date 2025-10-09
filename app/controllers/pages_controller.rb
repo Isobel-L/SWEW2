@@ -1,17 +1,33 @@
 class PagesController < ApplicationController
-  def home
-    @account_name = "@AccountName"
-    @school_name  = "(School Name)"
+  before_action :set_user
 
-    @alien_high_score = nil
-    @alien_rank       = nil
-    @blast_high_score = nil
-    @blast_rank       = nil
-    @total_rank       = nil
+  def home
+    # shows current profile info
   end
 
   def profile
-    @account_name = "@AccountName"
-    @school_name  = "(School Name)"
+    # shows profile page
+  end
+
+  def account
+    # account settings form
+  end
+
+  def update_account
+    if @user.update(user_params)
+      redirect_to root_path, notice: "Profile updated!"
+    else
+      render :account
+    end
+  end
+
+  private
+
+  def set_user
+    @user = User.first
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :bio, :avatar)
   end
 end

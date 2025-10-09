@@ -1,0 +1,27 @@
+<h1>Account Settings</h1>
+
+<%= form_with model: @user, url: account_path, method: :patch, local: true do |f| %>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :bio %><br>
+    <%= f.text_area :bio %>
+  </div>
+
+  <h2>Choose Profile Picture</h2>
+  <div class="avatars">
+    <% ["avatar1.png","avatar2.png","avatar3.png","avatar4.png","avatar5.png","avatar6.png"].each do |avatar| %>
+      <label>
+        <%= f.radio_button :avatar, avatar %>
+        <%= image_tag avatar, class: "avatar-option" %>
+      </label>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Save", class: "btn" %>
+  </div>
+<% end %>
