@@ -1,5 +1,5 @@
 #login {
-    background-color: #8B5CF6;
+     background: url(twinklingStars.gif) repeat center center fixed;
 }
 
 .centre {
@@ -11,7 +11,6 @@ body .login-page {
   display: flex;
   justify-content: center;
   height: 100vh;
-  background-color: #3d2477;
 }
 
 .form {
@@ -56,15 +55,21 @@ body .login-page {
     color: #9468fa;
 }
 
-.form button {
-    width: 100%;
-    padding: 1rem;
-    background: #966cf8;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    margin-top: 2rem;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+/* === Sign In Button === */
+.form input[type="submit"] {
+  width: 100%;
+  background: #552f91;  
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.form input[type="submit"]:hover {
+  background: #7b4aca;;
+  transform: translateY(-2px);
 }
