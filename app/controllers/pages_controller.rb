@@ -36,6 +36,7 @@ class PagesController < ApplicationController
     @user = User.find_by(id: session[:user_id])
   end
 
+  # Require login to proceed to main page
   def require_login
     redirect_to login_path, alert: "Please log in first!" unless session[:user_id]
   end

@@ -1,3 +1,4 @@
+# Creates controller logic for login and user sessions
 class SessionsController < ApplicationController
   def new
   end
@@ -5,6 +6,7 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(username: params[:username])
 
+    # Sends user to home page on successful login, else show retry message
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       redirect_to root_path, notice: "Logged in successfully!"
