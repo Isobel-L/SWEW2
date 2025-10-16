@@ -1,5 +1,5 @@
 #login {
-     background: url(twinklingStars.gif) repeat center center fixed;
+     background: url(twinklingStars.gif) repeat center fixed;
 }
 
 .centre {
@@ -14,7 +14,7 @@ body .login-page {
 }
 
 .form {
-    background: #1a1a1a;
+    background: #181717;
     padding: 2.5rem;
     border-radius: 15px;
     width: 100%;
