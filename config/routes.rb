@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   root "pages#home"
 
-  resource  :profile,   only: :show
   resource  :blast_off, only: :show
   get "pages/home"
   get "home/about"

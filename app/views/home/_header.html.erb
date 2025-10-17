@@ -13,10 +13,14 @@
       <li class="nav-item">
         <%= link_to "About", "/about", class: "nav-link" %>
       </li>
+      
       <%# Profile page %>
       <li class="nav-item">
-        <%= link_to "Profile", profile_path, class: "nav-link" %>
+        <% if session[:user_id] %>
+          <%= link_to "Profile", account_path, class: "nav-link" %>
+        <% end %>
       </li>
+      
       <%# Alien Translation game (new design-patterns version) %>
       <li class="nav-item">
         <%= link_to "Alien Translation", alien_translation_path, class: "nav-link" %>
