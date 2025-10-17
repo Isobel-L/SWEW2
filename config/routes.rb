@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   get   "account", to: "pages#account",       as: :account
   patch "account", to: "pages#update_account"
+  get "profile", to: "pages#home", as: :profile
 
   get    "login",  to: "sessions#new"
   post   "login",  to: "sessions#create"
