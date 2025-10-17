@@ -1,9 +1,9 @@
 <div class="profile-page">
   <header class="profile-header">
-    <div class="avatar-lg"></div>
+    <%= image_tag(@user.avatar.presence || "default.png", class: "avatar-lg") %>
     <div>
-      <h1 class="handle"><%= @account_name %></h1>
-      <p class="school"><%= @school_name %></p>
+      <h1 class="handle"><%= @user.name.presence || "@AccountName" %></h1>
+      <p class="school"><%= @user.bio.presence || "(Your bio here)" %></p>
       <%= link_to "Back to Home", root_path, class: "btn" %>
     </div>
   </header>
@@ -16,3 +16,4 @@
     </ul>
   </section>
 </div>
+

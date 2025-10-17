@@ -1,4 +1,4 @@
-.profile-page {
+.profile-page, .account-page {
   max-width: 700px;
   margin: 0 auto;
   padding: 20px;
@@ -14,35 +14,37 @@
   margin-bottom: 24px;
 }
 
+.avatar, .avatar-lg, .avatar-option {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+}
+
 .avatar-lg {
   width: 90px;
   height: 90px;
-  border-radius: 50%;
-  background: #ccc;
-  flex: 0 0 auto;
 }
 
-.profile-page .handle {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: bold;
+.avatars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
 }
 
-.profile-page .school {
-  margin: 2px 0 0 0;
-  color: #666;
-  font-size: 0.95rem;
+.avatar-option {
+  width: 60px;
+  height: 60px;
+  border: 2px solid transparent;
+  cursor: pointer;
 }
 
-.profile-stats h2,
-.profile-actions h2 {
-  font-size: 1.1rem;
-  margin: 18px 0 10px;
-}
-
-.profile-stats ul {
-  margin: 0;
-  padding-left: 18px;
+input[type="radio"]:checked + .avatar-option {
+  border-color: #007bff;
 }
 
 .btn {

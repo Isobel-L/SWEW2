@@ -1,17 +1,47 @@
 class PagesController < ApplicationController
-  def home
-    @account_name = "@AccountName"
-    @school_name  = "(School Name)"
+  before_action :require_login
+  before_action :set_user
 
-    @alien_high_score = nil
-    @alien_rank       = nil
-    @blast_high_score = nil
-    @blast_rank       = nil
-    @total_rank       = nil
+  def home
+    if session[:user_id]
+      @user = User.find(session[:user_id])
+    else
+      redirect_to login_path, alert: "Log in first"
+    end
+  end
+
+  def login
+    redirect_to root_path if session[:user_id]
   end
 
   def profile
-    @account_name = "@AccountName"
-    @school_name  = "(School Name)"
+    # shows profile page
+  end
+
+  def account
+    # account settings form
+  end
+
+  def update_account
+    if @user.update(user_params)
+      redirect_to root_path, notice: "Profile updated!"
+    else
+      render :account
+    end
+  end
+
+  private
+
+  def set_user
+    @user = User.find_by(id: session[:user_id])
+  end
+
+  # Require login to proceed to main page
+  def require_login
+    redirect_to login_path, alert: "Please log in first!" unless session[:user_id]
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :bio, :avatar)
   end
 end

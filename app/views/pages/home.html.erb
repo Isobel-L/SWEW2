@@ -1,9 +1,10 @@
 <div class="home">
-  <%= link_to profile_path, class: "profile link-reset" do %>
-    <div class="avatar-placeholder" aria-hidden="true"></div>
+  <!-- Clickable profile header (goes to Account page) -->
+  <%= link_to account_path, class: "profile link-reset" do %>
+    <%= image_tag(@user.avatar.presence || "default.png", class: "avatar") %>
     <div class="profile-meta">
-      <div class="handle"><%= @account_name || "@AccountName" %></div>
-      <div class="school"><%= @school_name || "(School Name)" %></div>
+      <div class="handle"><%= @user.name.presence || "@AccountName" %></div>
+      <div class="school"><%= @user.bio.presence || "(Your bio here)" %></div>
     </div>
   <% end %>
 
