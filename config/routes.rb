@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Keep your current root (change if you prefer the Pages controller)
-  root "home#home"
+  root "pages#home"
 
   # --- Your existing routes ---
   resource  :profile,   only: :show
