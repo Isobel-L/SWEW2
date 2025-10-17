@@ -7,8 +7,7 @@ class AlienTranslationsController < ApplicationController
     difficulty = normalised_difficulty(params[:difficulty]) || :normal
     session[:difficulty] = difficulty
 
-    facade  = AlienTranslations::AlienTranslationsFacade.new(session: session)
-    @puzzle = facade.start_new_puzzle!(difficulty: difficulty)
+    @puzzle = @facade.start_new_puzzle!(difficulty: difficulty)
     @hint   = nil
 
     respond_to do |format|
