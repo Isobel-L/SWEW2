@@ -20,10 +20,9 @@ module AlienTranslations
 
     def generate_puzzle(difficulty: :normal)
       word     = @word_repository.fetch_random
-      builder  = DefaultPuzzleBuilder.new
-      director = AlienTranslations::PuzzleDirector.new(builder)
+      factory  = AlienTranslations::PuzzleFactory.new
 
-      director.construct(
+      factory.build(
         word:         word,
         scrambler:    @scramble_service,
         hint_manager: @hint_manager,

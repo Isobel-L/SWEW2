@@ -37,7 +37,7 @@ class AlienTranslationsController < ApplicationController
     session[:run_score] ||= 0
     @run_score  = session[:run_score].to_i
     @puzzle     = @facade.start_new_puzzle!(difficulty: difficulty)
-    @best_score = score_store.best_score
+    @best_score = score_keeper.best
 
     render :alien_translation
   end
@@ -60,19 +60,14 @@ class AlienTranslationsController < ApplicationController
     correct = @facade.submit_guess!(params[:attempt])
 
     if correct
-      diff      = (session[:difficulty] || :normal).to_sym
-      attempts  = session[:attempts].to_i
-      hints     = @facade.hints_used.to_i
-      gained    = word_score(diff, attempts, hints)
+      diff     = (session[:difficulty] || :normal).to_sym
+      attempts = session[:attempts].to_i
+      hints    = @facade.hints_used.to_i
 
-      session[:run_score]  = session[:run_score].to_i + gained
-
-      prev_best = score_store.best_score
-      best      = score_store.record!(session[:run_score].to_i)
-      @new_best = prev_best.nil? || best > prev_best
-
-      @best_score = best
-      @run_score  = session[:run_score].to_i
+      scores   = score_keeper.apply_correct!(difficulty: diff, attempts: attempts, hints: hints)
+      @best_score = scores[:best]
+      @run_score  = scores[:run]
+      @new_best   = scores[:best] == @run_score
       @hint       = nil
       @puzzle     = @facade.start_new_puzzle!(difficulty: diff)
 
@@ -80,16 +75,16 @@ class AlienTranslationsController < ApplicationController
         format.turbo_stream { render :create }
         format.html do
           redirect_to alien_translation_path,
-                      notice: "Correct! +#{gained} points. Run #{@run_score}. Best #{best}."
+                      notice: "Correct! +#{scores[:last]} points. Run #{@run_score}. Best #{@best_score}."
         end
       end
     else
-      session[:run_score] = 0
+      score_keeper.reset_run!
       @run_score  = 0
       @new_best   = false
       @puzzle     = @facade.current_puzzle
       @hint       = @facade.last_hint
-      @best_score = score_store.best_score
+      @best_score = score_keeper.best
       flash.now[:alert] = "Wrong! Run reset."
 
       respond_to do |format|
@@ -115,21 +110,8 @@ class AlienTranslationsController < ApplicationController
     ALLOWED_DIFFICULTIES.include?(sym) ? sym : :normal
   end
 
-  def score_store
-    @score_store ||= HighScores::FileBackedStore.new(session: session, cookies: cookies)
-  end
-
-  def word_score(difficulty, attempts, hints)
-    base =
-      case difficulty
-      when :easy   then 500
-      when :normal then 1000
-      when :hard   then 1500
-      else               750
-      end
-    attempt_penalty = [attempts - 1, 0].max * 150
-    raw = [base - attempt_penalty, 0].max
-    factor = (0.4 ** hints.to_i)
-    (raw * factor).floor
+  private
+  def score_keeper
+    @score_keeper ||= HighScores::ScoreKeeper.new(session: session, cookies: cookies)
   end
 end
