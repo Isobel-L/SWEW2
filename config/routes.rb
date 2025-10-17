@@ -23,6 +23,10 @@ Rails.application.routes.draw do
   get  "signup", to: "users#new"
   post "signup", to: "users#create"
 
+  get "blast_off", to: "blast_off#show"
+  post "blast_off/check", to: "blast_off#check"
+
+
   get "up" => "rails/health#show", as: :rails_health_check
   
 end

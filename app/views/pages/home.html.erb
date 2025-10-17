@@ -26,10 +26,10 @@
       </div>
     </article>
 
-    <article class="game-card">
+    <%= link_to blast_off_path, class:"game-card" do %>
       <div class="game-badge"></div>
       <div class="game-content">
-        <h2 class="game-title">Blast Off! <span>(maths)</span></h2>
+          <h2 class="game-title"> Blast Off! <span>(maths)</span> </h2>
         <div class="stats">
           <div class="stat">
             <label>high score</label>
@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-    </article>
+    <% end %>
   </section>
 
   <section class="total-points">
