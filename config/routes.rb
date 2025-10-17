@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
-  # Keep your current root (change if you prefer the Pages controller)
   root "pages#home"
 
-  # --- Your existing routes ---
   resource  :profile,   only: :show
   resource  :blast_off, only: :show
   get "pages/home"
@@ -16,14 +14,15 @@ Rails.application.routes.draw do
        to: "alien_translations#change_difficulty",
        as: :change_difficulty_alien_translation
 
-  # --- Friend's additions (no helper/name clashes) ---
   get   "account", to: "pages#account",       as: :account
   patch "account", to: "pages#update_account"
 
   get    "login",  to: "sessions#new"
   post   "login",  to: "sessions#create"
   delete "logout", to: "sessions#destroy"
+  get  "signup", to: "users#new"
+  post "signup", to: "users#create"
 
-  # Single health check route
   get "up" => "rails/health#show", as: :rails_health_check
+  
 end
