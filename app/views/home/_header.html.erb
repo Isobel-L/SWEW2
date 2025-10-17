@@ -6,6 +6,7 @@
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <!-- Links -->
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
@@ -13,7 +14,7 @@
       <li class="nav-item">
         <%= link_to "About", "/about", class: "nav-link" %>
       </li>
-      
+
       <%# Profile page %>
       <li class="nav-item">
         <% if session[:user_id] %>
@@ -25,13 +26,25 @@
       <li class="nav-item">
         <%= link_to "Alien Translation", alien_translation_path, class: "nav-link" %>
       </li>
+
       <%# Blast Off page %>
       <li class="nav-item">
         <%= link_to "Blast Off", blast_off_path, class: "nav-link" %>
       </li>
-      <%# Contacts page %>
+
+      <%# Login page %>
+      <% if session[:user_id].blank? %>
+        <li class="nav-item">
+          <%= link_to "Login", login_path, class: "nav-link" %>
+        </li>
+      <% end %>
+
+      
+      <%# Logout page %>
       <li class="nav-item">
-        <%= link_to "Login", login_path, class: "nav-link" %>
+        <% if session[:user_id] %>
+          <%= button_to "Logout", logout_path, method: :delete, class: "btn btn-danger nav-link", form: { style: "display:inline;" } %>
+        <% end %>
       </li>
     </ul>
   </div>
