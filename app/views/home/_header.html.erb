@@ -1,6 +1,7 @@
 <!-- app/views/layouts/_header.html.erb -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <%= link_to 'Phantom Devs', root_path, class: "navbar-brand" %>
+  
   <!-- Toggler for mobile -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,13 +40,20 @@
         </li>
       <% end %>
 
-      
       <%# Logout page %>
       <li class="nav-item">
         <% if session[:user_id] %>
           <%= button_to "Logout", logout_path, method: :delete, class: "btn btn-danger nav-link", form: { style: "display:inline;" } %>
         <% end %>
       </li>
+
+      <%# Sign up page %>
+      <% if session[:user_id].blank? %>
+        <li class="nav-item">
+          <%= link_to "Sign Up", signup_path, class: "nav-link" %>
+        </li>
+      <% end %>
+
     </ul>
   </div>
 </nav>
