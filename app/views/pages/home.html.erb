@@ -44,6 +44,21 @@
     <% end %>
   </section>
 
+  <%= link_to 'View Leaderboard', leaderboard_path, class: 'button' %>
+
+<style>
+.button{
+  display:inline-block;
+  background:#007bff;
+  color:white;
+  padding:10px 20px;
+  text-decoration:none;
+  border-radius:5px;
+  margin-top:15px
+}
+.button:hover{background:#0056b3}
+</style>
+
   <section class="total-points">
     <h2>TOTAL POINTS</h2>
     <div class="stat">

@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   get "home/about"
   get "home/index"
 
+   # --- Leaderboard --- 
+  Rails.application.routes.draw do
+  get 'leaderboard', to: 'leaderboard#index'
+  end
+
   # --- Alien Translation game ---
   get  "alien_translation", to: "alien_translations#alien_translation", as: :alien_translation
   post "alien_translation", to: "alien_translations#create"
