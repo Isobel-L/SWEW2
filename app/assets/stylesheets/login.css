@@ -1,75 +1,45 @@
-#login {
-     background: url(twinklingStars.gif) repeat center fixed;
+/* Space-styled login/signup */
+body{
+  background:radial-gradient(circle at top,#0b0b3b 0%,#000010 100%);
+  font-family:'Orbitron',sans-serif;
+  color:#fff;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:0;
 }
+.login-container{
+  width:360px;
+  padding:35px 45px;
+  background:rgba(15,15,45,0.9);
+  border-radius:15px;
+  border:1px solid #00ffff;
+  box-shadow:0 0 30px #00e0ff;
+  text-align:center;
+}
+h1{
+  color:#00e0ff;
+  margin-bottom:25px;
+  letter-spacing:2px;
+  text-shadow:0 0 10px #00e0ff;
+}
+label{font-size:0.9em;color:#0ff;}
+input[type=text],input[type=password],input[type=email]{
+  width:100%;padding:10px;margin:10px 0;
+  border:1px solid #00ffff;border-radius:8px;
+  background:#0a0a30;color:#fff;
+}
+input[type=submit]{
+  width:100%;padding:10px;
+  background:#00e0ff;color:#000;border:none;
+  border-radius:8px;font-weight:bold;
+  cursor:pointer;transition:0.3s;
+}
+input[type=submit]:hover{
+  background:#00ffff;box-shadow:0 0 15px #00ffff;
+}
+p{margin-top:15px;font-size:0.9em;color:#ccc;}
+a{color:#00ffff;text-decoration:none;}
+a:hover{text-shadow:0 0 8px #00ffff;}
 
-.centre {
-    text-align: center;
-}
-
-body .login-page {
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-}
-
-.form {
-    background: #181717;
-    padding: 2.5rem;
-    border-radius: 15px;
-    width: 100%;
-    max-width: 400px;
-    margin: auto;
-    color: white;
-}
-
-.form .input-group {
-    position: relative;
-    margin: 2rem 0;
-}
-
-.form input {
-    width: 100%;
-    padding: 0.8rem;
-    border: none;
-    border-bottom: 2px solid #444;
-    background: transparent;
-    color: white;
-    outline: none;
-}
-
-.form label {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-    transition: 0.3s;
-    pointer-events: none;
-}
-
-.form input:focus ~ label,
-.form input:valid ~ label {
-    top: -10px;
-    font-size: 0.8rem;
-    color: #9468fa;
-}
-
-/* === Sign In Button === */
-.form input[type="submit"] {
-  width: 100%;
-  background: #552f91;  
-  color: white;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 1rem;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.1s ease;
-}
-
-.form input[type="submit"]:hover {
-  background: #7b4aca;;
-  transform: translateY(-2px);
-}

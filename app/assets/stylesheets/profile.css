@@ -1,62 +1,130 @@
-.profile-page, .account-page {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+.account-container {
+  width: 60%;
+  margin: 100px auto;
+  background: rgba(10, 10, 40, 0.9);
+  border: 1px solid #00ffff;
+  border-radius: 20px;
+  box-shadow: 0 0 30px #00e0ff;
+  padding: 30px 50px;
+  text-align: center;
 }
 
-.profile-header {
+.account-info {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #ddd;
-  margin-bottom: 24px;
-}
-
-.avatar, .avatar-lg, .avatar-option {
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.avatar {
-  width: 60px;
-  height: 60px;
-}
-
-.avatar-lg {
-  width: 90px;
-  height: 90px;
-}
-
-.avatars {
-  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 40px;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 15px 0;
+}
+
+.account-avatar img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 2px solid #00ffff;
+  box-shadow: 0 0 15px #00ffff;
+}
+
+.account-details {
+  flex: 1;
+  text-align: left;
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 15px auto;
+  width: 90%;
+  background: rgba(0, 0, 30, 0.4);
+  border-radius: 10px;
+  padding: 15px 20px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.detail-row label {
+  color: #00ffff;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.detail-row span {
+  color: #fff;
+}
+
+.detail-row input,
+.detail-row textarea {
+  width: 100%;
+  background: rgba(0, 0, 40, 0.7);
+  border: 1px solid #00ffff;
+  border-radius: 6px;
+  color: #fff;
+  padding: 8px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.avatar-selection {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .avatar-option {
-  width: 60px;
-  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.avatar-thumb {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
   border: 2px solid transparent;
-  cursor: pointer;
+  transition: 0.3s;
 }
 
-input[type="radio"]:checked + .avatar-option {
-  border-color: #007bff;
+.avatar-option input:checked + .avatar-thumb {
+  border-color: #00ffff;
+  box-shadow: 0 0 15px #00ffff;
 }
 
-.btn {
+.stats {
+  margin-top: 30px;
+  border-top: 1px solid #00ffff;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.stat {
   display: inline-block;
-  padding: 8px 12px;
-  border: 1px solid #222;
-  background: #fff;
-  border-radius: 6px;
-  cursor: pointer;
+  margin: 10px 20px;
+  color: #00ffff;
+  font-size: 1.1em;
 }
 
-.btn:disabled {
-  opacity: 0.6;
-  cursor: default;
+.account-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin-top: 35px;
+}
+
+.button {
+  background-color: #00e0ff;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  transition: 0.3s;
+}
+
+.button:hover {
+  background-color: #00ffff;
+  transform: scale(1.05);
 }

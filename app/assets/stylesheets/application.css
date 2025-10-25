@@ -1,10 +1,25 @@
-/*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
- */
+body{
+  margin:0;
+  font-family:'Orbitron',sans-serif;
+  color:#fff;
+  background:radial-gradient(circle at top,#0b0b3b 0%,#000010 100%);
+  min-height:100vh;
+  background-attachment:fixed;
+  overflow-x:hidden;
+}
+h1,h2,h3{font-weight:700;letter-spacing:2px;color:#00e0ff;text-shadow:0 0 10px #00e0ff;}
+a{color:#00e0ff;text-decoration:none;}
+a:hover{text-shadow:0 0 5px #00ffff;}
+.container{width:80%;margin:auto;max-width:1000px;}
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:15px;background:rgba(0,0,40,0.6);border-bottom:1px solid #0ff;}
+footer{text-align:center;padding:20px;font-size:0.9em;color:#888;}
+@keyframes stars{0%{background-position:0 0;}100%{background-position:-10000px 5000px;}}
+body::before{
+  content:"";
+  position:fixed;
+  top:0;left:0;width:200%;height:200%;
+  background:url('/images/stars.png') repeat;
+  animation:stars 200s linear infinite;
+  opacity:0.2;
+  z-index:-1;
+}

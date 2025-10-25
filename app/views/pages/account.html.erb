@@ -1,27 +1,102 @@
-<h1>Account Settings</h1>
+<%= stylesheet_link_tag "profile", media: "all" %>
 
-<%= form_with model: @user, url: account_path, method: :patch, local: true do |f| %>
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
+<div class="account-container">
+  <h1>Your Profile</h1>
+
+  <div class="profile-section">
+    <div class="avatar">
+      <% if @user.avatar.present? %>
+        <%= image_tag @user.avatar, alt: "Avatar" %>
+      <% else %>
+        <%= image_tag "default.png", alt: "Avatar" %>
+      <% end %>
+    </div>
+
+    <div class="user-info">
+      <p><strong>Username:</strong> <%= @user.username %></p>
+      <p><strong>School:</strong> <%= @user.school.presence || "Not provided" %></p>
+      <p><strong>Bio:</strong> <%= @user.bio.presence || "No bio yet" %></p>
+      <p><strong>Alien Points:</strong> <%= @user.alien_points %></p>
+      <p><strong>Blast Off Points:</strong> <%= @user.blastoff_points %></p>
+      <p><strong>Total Points:</strong> <%= @user.alien_points + @user.blastoff_points %></p>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :bio %><br>
-    <%= f.text_area :bio %>
+  <div class="account-buttons">
+    <%= link_to "Edit Profile", edit_account_path, class: "button" %>
+    <%= link_to "Return Home", root_path, class: "button" %>
   </div>
+</div>
 
-  <h2>Choose Profile Picture</h2>
-  <div class="avatars">
-    <% ["avatar1.png","avatar2.png","avatar3.png","avatar4.png","avatar5.png","avatar6.png"].each do |avatar| %>
-      <label>
-        <%= f.radio_button :avatar, avatar %>
-        <%= image_tag avatar, class: "avatar-option" %>
-      </label>
-    <% end %>
-  </div>
+<style>
+.account-container {
+  width: 900px;
+  margin: 100px auto;
+  background: rgba(20, 20, 60, 0.9);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 25px #00ffff;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+}
 
-  <div class="actions">
-    <%= f.submit "Save", class: "btn" %>
-  </div>
-<% end %>
+.account-container h1 {
+  color: #00e0ff;
+  text-shadow: 0 0 15px #00ffff;
+  margin-bottom: 40px;
+}
+
+.profile-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* smaller spacing between avatar and info */
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.avatar img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px solid #00ffff;
+  box-shadow: 0 0 25px #00ffff;
+}
+
+.user-info {
+  text-align: left;
+  width: 380px; /* widened box */
+  background: rgba(10, 10, 40, 0.85);
+  padding: 25px 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px #00ffff;
+}
+
+.user-info p {
+  margin: 10px 0;
+  font-size: 1.1em;
+}
+
+.account-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+.button {
+  background: linear-gradient(90deg, #00ffff, #0080ff);
+  border: none;
+  color: #000;
+  font-weight: bold;
+  font-family: 'Orbitron', sans-serif;
+  border-radius: 10px;
+  padding: 10px 30px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.button:hover {
+  box-shadow: 0 0 15px #00ffff;
+}
+</style>

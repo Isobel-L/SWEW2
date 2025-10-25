@@ -1,35 +1,115 @@
-<h1 class="mt-4">Create your account</h1>
+<%= stylesheet_link_tag "login", media: "all" %>
 
-<%= form_with model: @user, url: signup_path, local: true, class: "mt-3" do |f| %>
-  <div class="form-group">
-    <%= f.label :name %>
-    <%= f.text_field :name, class: "form-control" %>
-  </div>
+<div class="login-container">
+  <h1>Sign Up</h1>
 
-  <div class="form-group">
-    <%= f.label :username %>
-    <%= f.text_field :username, class: "form-control", required: true %>
-  </div>
+  <%= form_with model: @user, url: signup_path do |form| %>
+    <div class="form-group">
+      <%= form.label :username, "Username" %>
+      <%= form.text_field :username, required: true %>
+    </div>
 
-  <div class="form-group">
-    <%= f.label :school %>
-    <%= f.text_field :school, class: "form-control" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :password, "Password" %>
+      <%= form.password_field :password, required: true %>
+    </div>
 
-  <div class="form-group">
-    <%= f.label :bio %>
-    <%= f.text_area :bio, rows: 3, class: "form-control" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :password_confirmation, "Confirm Password" %>
+      <%= form.password_field :password_confirmation, required: true %>
+    </div>
 
-  <div class="form-group">
-    <%= f.label :password %>
-    <%= f.password_field :password, class: "form-control", required: true %>
-  </div>
+    <div class="form-group">
+      <%= form.label :school, "School" %>
+      <%= form.text_field :school %>
+    </div>
 
-  <div class="form-group">
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, class: "form-control", required: true %>
-  </div>
+    <div class="form-group">
+      <%= form.label :bio, "Bio" %>
+      <%= form.text_area :bio, rows: 3 %>
+    </div>
 
-  <%= f.submit "Sign Up", class: "btn btn-primary" %>
-<% end %>
+    <div class="button-group">
+      <%= form.submit "Create Account", class: "login-button" %>
+      <%= link_to "Back to Login", login_path, class: "link-button" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+.login-container {
+  width: 420px;
+  margin: 100px auto;
+  padding: 40px;
+  background: rgba(20, 20, 60, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 0 25px #00ffff;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+}
+
+.login-container h1 {
+  margin-bottom: 25px;
+  color: #00e0ff;
+  text-shadow: 0 0 12px #00ffff;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #ccc;
+  font-size: 0.9em;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #0b0b2b;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.login-button {
+  background: linear-gradient(90deg, #00ffff, #0080ff);
+  border: none;
+  color: #000;
+  font-weight: bold;
+  font-family: 'Orbitron', sans-serif;
+  border-radius: 10px;
+  padding: 10px 25px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-button:hover {
+  box-shadow: 0 0 15px #00ffff;
+}
+
+.link-button {
+  color: #00e0ff;
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: 0.3s;
+}
+
+.link-button:hover {
+  color: #fff;
+  text-shadow: 0 0 8px #00ffff;
+}
+</style>

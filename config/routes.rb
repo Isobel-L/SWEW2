@@ -6,10 +6,8 @@ Rails.application.routes.draw do
   get "home/about"
   get "home/index"
 
-   # --- Leaderboard --- 
-  Rails.application.routes.draw do
-  get 'leaderboard', to: 'leaderboard#index'
-  end
+  # --- Leaderboard ---
+  get "leaderboard", to: "leaderboard#index"
 
   # --- Alien Translation game ---
   get  "alien_translation", to: "alien_translations#alien_translation", as: :alien_translation
@@ -24,14 +22,18 @@ Rails.application.routes.draw do
   post "blast_off/check",  to: "blast_off#check", as: :blast_off_check
 
   # --- Account and Profile ---
-  get   "account", to: "pages#account",       as: :account
-  patch "account", to: "pages#update_account"
-  get   "profile", to: "pages#home",          as: :profile
+  get   "account",       to: "pages#account",        as: :account
+  get   "account/edit",  to: "pages#edit_account",   as: :edit_account
+  patch "account",       to: "pages#update_account"
+  get   "profile",       to: "pages#home",           as: :profile
 
   # --- Authentication ---
   get    "login",  to: "sessions#new"
   post   "login",  to: "sessions#create"
+
+  # ✅ supports both GET and DELETE for logout
   delete "logout", to: "sessions#destroy"
+  get    "logout", to: "sessions#destroy"
 
   get  "signup", to: "users#new"
   post "signup", to: "users#create"

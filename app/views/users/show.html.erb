@@ -1,0 +1,22 @@
+<div class="profile-container">
+  <h1><%= @user.username %>’s Profile</h1>
+
+  <% if @user.avatar.present? %>
+    <img src="<%= @user.avatar %>" class="avatar" alt="avatar">
+  <% else %>
+    <img src="/images/default_avatar.png" class="avatar" alt="avatar">
+  <% end %>
+
+  <p><%= @user.bio.presence || "This explorer hasn’t added a bio yet." %></p>
+  <p><strong>School:</strong> <%= @user.school.presence || "Unknown" %></p>
+
+  <div class="stats">
+    <div class="stat">🛸 Alien Points: <%= @user.alien_points %></div>
+    <div class="stat">🚀 Blastoff Points: <%= @user.blastoff_points %></div>
+    <div class="stat">⭐ Total: <%= @user.alien_points + @user.blastoff_points %></div>
+  </div>
+
+  <%= link_to "Edit Profile", edit_user_path(@user), class: "button" %>
+  <%= link_to "Return to Main Base", root_path, class: "button" %>
+</div>
+
