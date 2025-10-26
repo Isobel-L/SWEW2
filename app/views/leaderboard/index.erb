@@ -1,0 +1,36 @@
+<%= stylesheet_link_tag "leaderboard", media: "all" %>
+<%= stylesheet_link_tag "buttons", media: "all" %>
+
+<div class="leaderboard">
+  <h1>Leaderboard</h1>
+  <p class="subtitle">Top explorers ranked by total mission points</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Username</th>
+        <th>Total Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each_with_index do |user, index| %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= user.username %></td>
+          <td><%= user.total_points %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= link_to "Return to Main Base", root_path, class: "button" %>
+</div>
+
+<style>
+.subtitle{
+  color:#ccc;
+  font-size:1em;
+  margin-bottom:25px;
+}
+</style>

@@ -1,33 +1,30 @@
 class PagesController < ApplicationController
-  before_action :set_user
-
   def home
-    # shows current profile info
-  end
-
-  def profile
-    # shows profile page
+    @user = User.find_by(id: session[:user_id])
   end
 
   def account
-    # account settings form
+    @user = User.find_by(id: session[:user_id])
+  end
+
+  def edit_account
+    @user = User.find_by(id: session[:user_id])
   end
 
   def update_account
+    @user = User.find_by(id: session[:user_id])
     if @user.update(user_params)
-      redirect_to root_path, notice: "Profile updated!"
+      redirect_to account_path, notice: "Profile updated successfully!"
     else
-      render :account
+      render :edit_account, status: :unprocessable_entity
     end
   end
 
   private
 
-  def set_user
-    @user = User.first
-  end
-
   def user_params
-    params.require(:user).permit(:name, :bio, :avatar)
+    params.require(:user).permit(:username, :bio, :school, :avatar)
   end
 end
+
+

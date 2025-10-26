@@ -1,5 +1,6 @@
 <div class="home">
   <!-- Clickable profile header (goes to Account page) -->
+  <<% if session[:user_id] %>
   <%= link_to account_path, class: "profile link-reset" do %>
     <%= image_tag(@user.avatar.presence || "default.png", class: "avatar") %>
     <div class="profile-meta">
@@ -7,9 +8,10 @@
       <div class="school"><%= @user.bio.presence || "(Your bio here)" %></div>
     </div>
   <% end %>
+  <% end %>
 
   <section class="games">
-    <article class="game-card">
+    <%= link_to alien_translation_path, class:"game-card" do %>
       <div class="game-badge"></div>
       <div class="game-content">
         <h2 class="game-title">Alien Translation <span>(spelling)</span></h2>
@@ -24,12 +26,12 @@
           </div>
         </div>
       </div>
-    </article>
+    <% end %>
 
-    <article class="game-card">
+    <%= link_to blast_off_path, class:"game-card" do %>
       <div class="game-badge"></div>
       <div class="game-content">
-        <h2 class="game-title">Blast Off! <span>(maths)</span></h2>
+          <h2 class="game-title"> Blast Off! <span>(maths)</span> </h2>
         <div class="stats">
           <div class="stat">
             <label>high score</label>
@@ -41,8 +43,23 @@
           </div>
         </div>
       </div>
-    </article>
+    <% end %>
   </section>
+
+  <%= link_to 'View Leaderboard', leaderboard_path, class: 'button' %>
+
+<style>
+.button{
+  display:inline-block;
+  background:#007bff;
+  color:white;
+  padding:10px 20px;
+  text-decoration:none;
+  border-radius:5px;
+  margin-top:15px
+}
+.button:hover{background:#0056b3}
+</style>
 
   <section class="total-points">
     <h2>TOTAL POINTS</h2>

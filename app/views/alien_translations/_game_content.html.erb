@@ -1,0 +1,28 @@
+<div id="game-container">
+  <p><strong>Scrambled:</strong> <%= (session[:scrambled] || puzzle.scrambled_word).to_s %></p>
+  <p><strong>Attempts:</strong> <%= session[:attempts].to_i %></p>
+
+  <%= form_with url: alien_translation_path, method: :post do |f| %>
+    <%= f.label :attempt, "Your guess:" %>
+    <%= f.text_field :attempt, autofocus: true %>
+    <%= f.submit "Check" %>
+  <% end %>
+
+  <%= button_to "Get a Hint", alien_translation_hint_path,
+                method: :post,
+                form: { data: { turbo_stream: true } } %>
+
+  <% if flash[:notice].present? %>
+    <p style="color: lightgreen"><%= flash[:notice] %></p>
+  <% end %>
+
+  <% if flash[:alert].present? %>
+    <p style="color: #ff8080"><%= flash[:alert] %></p>
+  <% end %>
+
+  <div id="hint">
+    <% if hint.present? %>
+      <p><strong>Hint:</strong> <%= hint %></p>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+.leaderboard{
+  width:70%;margin:60px auto;text-align:center;
+  background:rgba(10,10,40,0.8);
+  border:2px solid #00ffff;border-radius:20px;padding:20px;
+  box-shadow:0 0 30px #00e0ff;
+}
+.leaderboard table{width:100%;border-collapse:collapse;}
+.leaderboard th{color:#00ffff;padding:15px;font-size:1.2em;}
+.leaderboard td{padding:10px;border-top:1px solid #00ffff;}
+tr:nth-child(odd){background:rgba(255,255,255,0.05);}
+tr:first-child td{font-weight:bold;color:#ff00ff;text-shadow:0 0 5px #ff00ff;}
+h1{text-align:center;}

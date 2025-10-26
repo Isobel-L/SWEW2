@@ -1,0 +1,9 @@
+<%= turbo_stream.replace "difficulty-buttons" do %>
+  <%= render partial: "alien_translations/difficulty_buttons",
+             locals: { difficulty: (session[:difficulty] || :normal).to_sym } %>
+<% end %>
+
+<%= turbo_stream.replace "game-container" do %>
+  <%= render partial: "alien_translations/game_content",
+             locals: { puzzle: @puzzle, hint: @hint, difficulty: session[:difficulty] } %>
+<% end %>

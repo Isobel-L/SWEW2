@@ -1,0 +1,40 @@
+<%= stylesheet_link_tag "profile", media: "all" %>
+
+<div class="account-container">
+  <h1>🛠️ Edit Profile</h1>
+
+  <%= form_with model: @user, url: account_path, method: :patch, local: true do |form| %>
+    <div class="detail-row">
+      <%= form.label :username, "Name:" %>
+      <%= form.text_field :username %>
+    </div>
+
+    <div class="detail-row bio">
+      <%= form.label :bio, "Bio:" %>
+      <%= form.text_area :bio, rows: 3 %>
+    </div>
+
+    <div class="detail-row">
+      <%= form.label :school, "School:" %>
+      <%= form.text_field :school %>
+    </div>
+
+    <div class="detail-row">
+      <%= form.label :avatar, "Choose Avatar:" %>
+      <div class="avatar-selection">
+        <% (1..6).each do |i| %>
+          <% filename = "avatar#{i}.png" %>
+          <label class="avatar-option">
+            <%= form.radio_button :avatar, filename, checked: @user.avatar == filename %>
+            <%= image_tag filename, class: "avatar-thumb" %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="account-buttons">
+      <%= form.submit "Save Changes", class: "button" %>
+      <%= link_to "Cancel", account_path, class: "button" %>
+    </div>
+  <% end %>
+</div>

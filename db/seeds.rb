@@ -9,7 +9,34 @@
 #   end
 
 User.create!(
-  name: "Name: ",
-  bio: "Bio: .",
+  name: "John Doe",
+  username: "johnd",
+  school: "Springfield High",
+  password: "password123",
+  bio: "I love coding!",
+  alien_points: 50,
+  blastoff_points: 20,
+  avatar: nil
+)
+
+User.create!(
+  name: "Breanna L",
+  username: "bwanafy",
+  school: "Adelaide Uni",
+  password: "pass1",
+  bio: "Hello",
+  alien_points: 50,
+  blastoff_points: 20,
+  avatar: nil
+)
+
+User.create!(
+  name: "Sally",
+  username: "rocketgal",
+  school: "Adelaide Uni",
+  password: "pass2",
+  bio: ";)",
+  alien_points: 50,
+  blastoff_points: 20,
   avatar: nil
 )

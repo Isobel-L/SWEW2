@@ -1,0 +1,26 @@
+* [33md610c2e[m[33m ([m[1;31morigin/dependabot/bundler/solid_queue-1.2.2[m[33m)[m Bump solid_queue from 1.2.1 to 1.2.2
+[31m|[m * [33m6465835[m[33m ([m[1;31morigin/dependabot/bundler/rails-8.1.0[m[33m)[m Bump rails from 8.0.2.1 to 8.1.0
+[31m|[m[31m/[m  
+[31m|[m *   [33ma6123d6[m[33m ([m[1;31morigin/blast_off[m[33m)[m Merge pull request #17 from Isobel-L/merged
+[31m|[m [33m|[m[34m\[m  
+[31m|[m [33m|[m * [33m1b18185[m[33m ([m[1;36mHEAD -> [m[1;32mmerged[m[33m, [m[1;31morigin/merged[m[33m)[m added sign up tio header implemented sign up in last commit sorry i forgot to mention
+[31m|[m [33m|[m * [33m0c5fbf0[m merged blast off and fixed routes
+[31m|[m [33m|[m *   [33m826e373[m mergin Merge remote-tracking branch 'origin/blast_off' into merged
+[31m|[m [33m|[m [35m|[m[33m\[m  
+[31m|[m [33m|[m [35m|[m[33m/[m  
+[31m|[m [33m|[m[33m/[m[35m|[m   
+[31m|[m * [35m|[m [33mddbdefe[m Number Generation Testing
+[31m|[m [36m|[m * [33md022e84[m empty line
+[31m|[m [36m|[m * [33mb56d728[m edited routes
+[31m|[m [36m|[m * [33mc7d5a04[m fixed login and logout links and when they should appear
+[31m|[m [36m|[m * [33m2865836[m delete my temporary profile and places breana's profile there. It links currently logged in user.
+[31m|[m [36m|[m * [33me03bb4f[m stars background works only for alien translations now
+[31m|[m [36m|[m * [33m3e5b537[m fixed homepage (i used wrong one)
+[31m|[m [36m|[m *   [33md159353[m Merge branch 'databaseToMerge' into WesamToMerge
+[31m|[m [36m|[m [1;31m|[m[1;32m\[m  
+[31m|[m [36m|[m [1;31m|[m * [33m5092bb7[m[33m ([m[1;31morigin/database[m[33m)[m css
+[31m|[m [36m|[m [1;31m|[m * [33m75655c4[m css changes
+[31m|[m [36m|[m [1;31m|[m * [33mc34d413[m adding comments
+[31m|[m [36m|[m [1;31m|[m * [33m496f2ca[m working login system that changes users on main page depending on database
+[31m|[m [36m|[m[31m_[m[1;31m|[m[31m/[m  
+[31m|[m[31m/[m[36m|[m [1;31m|[m   

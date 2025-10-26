@@ -1,0 +1,60 @@
+<%= stylesheet_link_tag "blast_off", media: "all" %>
+<div class="numbers-game">
+  <h1>Blast Off!</h1>
+  
+  <div class="target-section">
+    <h2>Target Number</h2>
+    <div class="target-display"><%= @target %></div>
+  </div>
+
+  <div class="numbers-section">
+    <h3>Use these numbers:</h3>
+    <div class="numbers-grid">
+      <% @numbers.each do |num| %>
+        <div class="number-tile"><%= num %></div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="operators-section">
+    <h3>Available operators:</h3>
+    <div class="operators">
+      <span class="operator">+</span>
+      <span class="operator">−</span>
+      <span class="operator">×</span>
+      <span class="operator">÷</span>
+      <span class="operator">( )</span>
+    </div>
+  </div>
+
+  <% if flash[:success] %>
+    <div class="alert alert-success"><%= flash[:success] %></div>
+  <% end %>
+  
+  <% if flash[:error] %>
+    <div class="alert alert-error"><%= flash[:error] %></div>
+  <% end %>
+
+  <%= form_with url: blast_off_check_path, method: :post, class: "answer-form" do |f| %>
+    <div class="input-group">
+      <label>Your solution:</label>
+      <%= f.text_field :expression, 
+          placeholder: "e.g., (100 + 25) * 2 - 50", 
+          class: "expression-input",
+          autocomplete: "off" %>
+    </div>
+    <%= f.submit "Check Answer", class: "btn-submit" %>
+  <% end %>
+
+  <div class="instructions">
+    <h4>Rules:</h4>
+    <ul>
+      <li>Use each number only once</li>
+      <li>You can use +, -, *, / and parentheses</li>
+      <li>You don't have to use all numbers</li>
+    </ul>
+  </div>
+
+  <%= link_to "New Game", blast_off_path, class: "btn-new-game" %>
+</div>
+

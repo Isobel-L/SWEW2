@@ -1,0 +1,15 @@
+.button{
+  display:inline-block;
+  padding:10px 25px;
+  background:#00e0ff;
+  color:#000;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  transition:0.3s;
+  cursor:pointer;
+}
+.button:hover{
+  background:#00ffff;
+  box-shadow:0 0 10px #00ffff,0 0 20px #00ffff;
+}

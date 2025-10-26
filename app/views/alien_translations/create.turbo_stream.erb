@@ -1,0 +1,26 @@
+<%= turbo_stream.replace "best-score" do %>
+  <p id="best-score">
+    High Score:
+    <span class="value"><%= @best_score.present? ? @best_score : "—" %></span>
+  </p>
+<% end %>
+
+<%= turbo_stream.replace "run-score" do %>
+  <p id="run-score">
+    Run Score:
+    <span class="value"><%= @run_score.present? ? @run_score : "0" %></span>
+  </p>
+<% end %>
+
+<%= turbo_stream.replace "new-best" do %>
+  <% if @new_best %>
+    <div id="new-best" class="new-best">New High Score!</div>
+  <% else %>
+    <div id="new-best"></div>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "game-container" do %>
+  <%= render partial: "alien_translations/game_content",
+             locals: { puzzle: @puzzle, hint: @hint, difficulty: session[:difficulty] } %>
+<% end %>
