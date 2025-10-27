@@ -1,5 +1,10 @@
-<style>
-  .game-title {
+<% content_for :body_class, "alien-translations-page" %>
+  <div id="starfield" aria-hidden="true">
+    
+  </div>
+
+  <style>  
+    .game-title {
     text-align: center;
     font-family: 'Bangers', cursive;
     font-size: 128px;
@@ -15,56 +20,73 @@
                  -3px  3px 0 #69edf9;
     margin-top: 20px;
     margin-bottom: 60px;
-  }
-  .page-wrap { text-align: center; color: #ffffff; font-family: Arial, sans-serif; }
-  .page-wrap input[type="text"] { background:#fff; color:#000; border:2px solid #000; padding:6px 8px; border-radius:6px; font-size:18px; }
-  .page-wrap button:not(.btn), .page-wrap input[type="submit"]:not(.btn), .page-wrap a.btn:not(.btn) { background:rgb(242,96,70); color:#fff; border:2px solid #000; padding:8px 16px; font-size:16px; border-radius:8px; cursor:pointer; transition:background-color .3s, transform .05s; text-decoration:none; }
-  .page-wrap button:not(.btn):hover, .page-wrap input[type="submit"]:not(.btn):hover, .page-wrap a.btn:not(.btn):hover { background:#629deb; border-color:#000; }
-  .page-wrap button:not(.btn):active, .page-wrap input[type="submit"]:not(.btn):active { transform: translateY(1px); }
-  .btn-group .btn.active { filter:brightness(.92); outline:2px solid #000; }
-  .page-wrap p, .page-wrap label { font-size:18px; }
+    }
+    .page-wrap { text-align: center; color: #ffffff; font-family: Arial, sans-serif; }
+    .page-wrap input[type="text"] { background:#fff; color:#000; border:2px solid #000; padding:6px 8px; border-radius:6px; font-size:18px; }
+    .page-wrap button:not(.btn), .page-wrap input[type="submit"]:not(.btn), .page-wrap a.btn:not(.btn) { background:rgb(242,96,70); color:#fff; border:2px solid #000; padding:8px 16px; font-size:16px; border-radius:8px; cursor:pointer; transition:background-color .3s, transform .05s; text-decoration:none; }
+    .page-wrap button:not(.btn):hover, .page-wrap input[type="submit"]:not(.btn):hover, .page-wrap a.btn:not(.btn):hover { background:#629deb; border-color:#000; }
+    .page-wrap button:not(.btn):active, .page-wrap input[type="submit"]:not(.btn):active { transform: translateY(1px); }
+    .btn-group .btn.active { filter:brightness(.92); outline:2px solid #000; }
+    .page-wrap p, .page-wrap label { font-size:18px; }
+  
+    #current-difficulty { display:block; width:fit-content; margin:10px auto 6px; padding:8px 14px; border-radius:999px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; text-shadow:1px 1px 0 #000; border:2px solid #000; box-shadow:0 6px 0 rgba(0,0,0,.25); backdrop-filter: blur(2px); }
+    #current-difficulty.difficulty-easy   { background: rgba(40,167,69,.2);  color:#9ef7b1; border-color:#1b5e20; }
+    #current-difficulty.difficulty-normal { background: rgba(0,123,255,.2);  color:#b6d8ff; border-color:#0d47a1; }
+    #current-difficulty.difficulty-hard   { background: rgba(220,53,69,.2);  color:#ffb3b8; border-color:#7f1d1d; }
+  
+    #best-score, #run-score { display:inline-block; margin:8px 6px 6px; padding:6px 12px; border-radius:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; background:rgba(255,255,255,.15); color:#fefefe; border:2px solid #000; box-shadow:0 4px 0 rgba(0,0,0,.25); }
+    #best-score .value { color:#ffe066; }
+    #run-score .value  { color:#f8b4ff; }
+  
+    #new-best { min-height:24px; margin:4px 0 16px; }
+    .new-best { display:inline-block; padding:6px 12px; border-radius:999px; background:#ffd54f; color:#000; font-weight:900; border:2px solid #000; box-shadow:0 4px 0 rgba(0,0,0,.25); animation:pulse .9s ease-in-out 2; }
+    @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
 
-  #current-difficulty { display:block; width:fit-content; margin:10px auto 6px; padding:8px 14px; border-radius:999px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; text-shadow:1px 1px 0 #000; border:2px solid #000; box-shadow:0 6px 0 rgba(0,0,0,.25); backdrop-filter: blur(2px); }
-  #current-difficulty.difficulty-easy   { background: rgba(40,167,69,.2);  color:#9ef7b1; border-color:#1b5e20; }
-  #current-difficulty.difficulty-normal { background: rgba(0,123,255,.2);  color:#b6d8ff; border-color:#0d47a1; }
-  #current-difficulty.difficulty-hard   { background: rgba(220,53,69,.2);  color:#ffb3b8; border-color:#7f1d1d; }
+    #starfield {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
 
-  #best-score, #run-score { display:inline-block; margin:8px 6px 6px; padding:6px 12px; border-radius:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; background:rgba(255,255,255,.15); color:#fefefe; border:2px solid #000; box-shadow:0 4px 0 rgba(0,0,0,.25); }
-  #best-score .value { color:#ffe066; }
-  #run-score .value  { color:#f8b4ff; }
+    #starfield .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.9;
+    }
 
-  #new-best { min-height:24px; margin:4px 0 16px; }
-  .new-best { display:inline-block; padding:6px 12px; border-radius:999px; background:#ffd54f; color:#000; font-weight:900; border:2px solid #000; box-shadow:0 4px 0 rgba(0,0,0,.25); animation:pulse .9s ease-in-out 2; }
-  @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
-</style>
-
-<div class="page-wrap">
-  <h1 class="game-title">Alien Translations</h1>
-
-  <%= render "alien_translations/difficulty_buttons",
-             locals: { difficulty: (session[:difficulty] || :normal).to_sym } %>
-
-  <p id="best-score">
+  </style>
+  
+  <div class="page-wrap">
+    <h1 class="game-title">Alien Translations</h1>
+  
+    <%= render "alien_translations/difficulty_buttons",
+               locals: { difficulty: (session[:difficulty] || :normal).to_sym } %>
+  
+    <p id="best-score">
     High Score:
     <span class="value"><%= @best_score.present? ? @best_score : "—" %></span>
-  </p>
-
-  <p id="run-score">
+    </p>
+  
+    <p id="run-score">
     Run Score:
     <span class="value"><%= @run_score.present? ? @run_score : "0" %></span>
-  </p>
-
-  <div id="new-best"></div>
-
-  <%= render partial: "alien_translations/game_content",
-             locals: { puzzle: @puzzle, hint: @hint, difficulty: session[:difficulty] } %>
-</div>
-
-<audio id="click-sound" preload="auto">
+    </p>
+  
+    <div id="new-best"></div>
+  
+    <%= render partial: "alien_translations/game_content",
+               locals: { puzzle: @puzzle, hint: @hint, difficulty: session[:difficulty] } %>
+  </div>
+  
+  <audio id="click-sound" preload="auto">
   <source src="<%= asset_path('mouse_click.mp3') %>" type="audio/mpeg">
-</audio>
-
-<script>
+  </audio>
+  
+  <script>
   function attachDifficultySound() {
     const clickSound = document.getElementById("click-sound");
     document.querySelectorAll('.btn-group form').forEach(form => {
@@ -79,4 +101,40 @@
   document.addEventListener("turbo:load", attachDifficultySound);
   document.addEventListener("turbo:render", attachDifficultySound);
   document.addEventListener("turbo:frame-load", attachDifficultySound);
-</script>
+  </script>
+  <script>
+    function buildStarfield() {
+      const el = document.getElementById('starfield');
+      if (!el || el.dataset.built) return; // avoid duplicates on Turbo renders
+      el.dataset.built = '1';
+
+      const STAR_COUNT = 600; // NUMBER OF STARS
+      const frag = document.createDocumentFragment();
+      const vw = window.innerWidth, vh = window.innerHeight;
+
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const s = document.createElement('span');
+        s.className = 'star';
+
+        // random position (pixels across the viewport)
+        s.style.left = Math.random() * vw + 'px';
+        s.style.top  = Math.random() * vh + 'px';
+
+        // random size (bias toward small)
+        const r = Math.random();
+        const size = r < 0.7 ? 1 : (r < 0.95 ? 2 : 3);
+        s.style.width = size + 'px';
+        s.style.height = size + 'px';
+
+        // slight randomness in brightness
+        s.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
+
+        frag.appendChild(s);
+      }
+      el.appendChild(frag);
+    }
+
+  document.addEventListener('turbo:load', buildStarfield);
+  if (document.readyState !== 'loading') buildStarfield();
+  else document.addEventListener('DOMContentLoaded', buildStarfield);
+  </script>

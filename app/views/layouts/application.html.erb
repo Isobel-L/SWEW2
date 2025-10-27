@@ -10,7 +10,7 @@
     <%= stylesheet_link_tag "application", "login", "profile", "leaderboard", "buttons", media: "all" %>
   </head>
 
-  <body>
+  <body class="<%= content_for?(:body_class) ? yield(:body_class) : '' %>">
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="nav-left">
@@ -46,7 +46,7 @@
 </html>
 
 <style>
-body {
+body:not(.alien-translations-page) {
   margin: 0;
   font-family: 'Orbitron', sans-serif;
   background: radial-gradient(circle at top, #0b0b3b 0%, #000010 100%);
