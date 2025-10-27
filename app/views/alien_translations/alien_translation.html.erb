@@ -1,140 +1,301 @@
-<% content_for :body_class, "alien-translations-page" %>
-  <div id="starfield" aria-hidden="true">
-    
-  </div>
+<%# Give the <body> tag a page-specific class so global styles in the layout can skip this page %>
+  <% content_for :body_class, "alien-translations-page" %>
 
-  <style>  
-    .game-title {
-    text-align: center;
-    font-family: 'Bangers', cursive;
-    font-size: 128px;
-    color: #ffffff;
-    background: linear-gradient(to bottom, #ffcc00, #ff3300);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    text-shadow: 3px 3px 0 #ffffff,
-                 -3px -3px 0 #5cfaf5,
-                  3px -3px 0 #41f2ec,
-                 -3px  3px 0 #69edf9;
-    margin-top: 20px;
-    margin-bottom: 60px;
-    }
-    .page-wrap { text-align: center; color: #ffffff; font-family: Arial, sans-serif; }
-    .page-wrap input[type="text"] { background:#fff; color:#000; border:2px solid #000; padding:6px 8px; border-radius:6px; font-size:18px; }
-    .page-wrap button:not(.btn), .page-wrap input[type="submit"]:not(.btn), .page-wrap a.btn:not(.btn) { background:rgb(242,96,70); color:#fff; border:2px solid #000; padding:8px 16px; font-size:16px; border-radius:8px; cursor:pointer; transition:background-color .3s, transform .05s; text-decoration:none; }
-    .page-wrap button:not(.btn):hover, .page-wrap input[type="submit"]:not(.btn):hover, .page-wrap a.btn:not(.btn):hover { background:#629deb; border-color:#000; }
-    .page-wrap button:not(.btn):active, .page-wrap input[type="submit"]:not(.btn):active { transform: translateY(1px); }
-    .btn-group .btn.active { filter:brightness(.92); outline:2px solid #000; }
-    .page-wrap p, .page-wrap label { font-size:18px; }
-  
-    #current-difficulty { display:block; width:fit-content; margin:10px auto 6px; padding:8px 14px; border-radius:999px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; text-shadow:1px 1px 0 #000; border:2px solid #000; box-shadow:0 6px 0 rgba(0,0,0,.25); backdrop-filter: blur(2px); }
-    #current-difficulty.difficulty-easy   { background: rgba(40,167,69,.2);  color:#9ef7b1; border-color:#1b5e20; }
-    #current-difficulty.difficulty-normal { background: rgba(0,123,255,.2);  color:#b6d8ff; border-color:#0d47a1; }
-    #current-difficulty.difficulty-hard   { background: rgba(220,53,69,.2);  color:#ffb3b8; border-color:#7f1d1d; }
-  
-    #best-score, #run-score { display:inline-block; margin:8px 6px 6px; padding:6px 12px; border-radius:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; background:rgba(255,255,255,.15); color:#fefefe; border:2px solid #000; box-shadow:0 4px 0 rgba(0,0,0,.25); }
-    #best-score .value { color:#ffe066; }
-    #run-score .value  { color:#f8b4ff; }
-  
-    #new-best { min-height:24px; margin:4px 0 16px; }
-    .new-best { display:inline-block; padding:6px 12px; border-radius:999px; background:#ffd54f; color:#000; font-weight:900; border:2px solid #000; box-shadow:0 4px 0 rgba(0,0,0,.25); animation:pulse .9s ease-in-out 2; }
-    @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
+    <!-- Full-viewport star container -->
+    <div id="starfield" aria-hidden="true"></div>
 
-    #starfield {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-    }
+    <style>
+      /* Title styling (the big Alien Translations) */
+      .game-title {
+        text-align: center;
+        font-family: 'Bangers', cursive;
+        font-size: 128px;
 
-    #starfield .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: #fff;
-      border-radius: 50%;
-      opacity: 0.9;
-    }
+        /* I use a gradient fill clipped to the text to get the arcade look */
+        background: linear-gradient(to bottom, #ffcc00, #ff3300);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
 
-  </style>
-  
-  <div class="page-wrap">
-    <h1 class="game-title">Alien Translations</h1>
-  
-    <%= render "alien_translations/difficulty_buttons",
-               locals: { difficulty: (session[:difficulty] || :normal).to_sym } %>
-  
-    <p id="best-score">
-    High Score:
-    <span class="value"><%= @best_score.present? ? @best_score : "—" %></span>
-    </p>
-  
-    <p id="run-score">
-    Run Score:
-    <span class="value"><%= @run_score.present? ? @run_score : "0" %></span>
-    </p>
-  
-    <div id="new-best"></div>
-  
-    <%= render partial: "alien_translations/game_content",
-               locals: { puzzle: @puzzle, hint: @hint, difficulty: session[:difficulty] } %>
-  </div>
-  
-  <audio id="click-sound" preload="auto">
-  <source src="<%= asset_path('mouse_click.mp3') %>" type="audio/mpeg">
-  </audio>
-  
-  <script>
-  function attachDifficultySound() {
-    const clickSound = document.getElementById("click-sound");
-    document.querySelectorAll('.btn-group form').forEach(form => {
-      form.addEventListener('submit', () => {
-        if (clickSound) {
-          clickSound.currentTime = 0;
-          clickSound.play().catch(() => {});
-        }
-      });
-    });
-  }
-  document.addEventListener("turbo:load", attachDifficultySound);
-  document.addEventListener("turbo:render", attachDifficultySound);
-  document.addEventListener("turbo:frame-load", attachDifficultySound);
-  </script>
-  <script>
-    function buildStarfield() {
-      const el = document.getElementById('starfield');
-      if (!el || el.dataset.built) return; // avoid duplicates on Turbo renders
-      el.dataset.built = '1';
+        /* offset shadows to get a neon effect */
+        text-shadow:
+          3px 3px 0 #ffffff,
+          -3px -3px 0 #5cfaf5,
+          3px -3px 0 #41f2ec,
+          -3px 3px 0 #69edf9;
 
-      const STAR_COUNT = 600; // NUMBER OF STARS
-      const frag = document.createDocumentFragment();
-      const vw = window.innerWidth, vh = window.innerHeight;
-
-      for (let i = 0; i < STAR_COUNT; i++) {
-        const s = document.createElement('span');
-        s.className = 'star';
-
-        // random position (pixels across the viewport)
-        s.style.left = Math.random() * vw + 'px';
-        s.style.top  = Math.random() * vh + 'px';
-
-        // random size (bias toward small)
-        const r = Math.random();
-        const size = r < 0.7 ? 1 : (r < 0.95 ? 2 : 3);
-        s.style.width = size + 'px';
-        s.style.height = size + 'px';
-
-        // slight randomness in brightness
-        s.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
-
-        frag.appendChild(s);
+        margin-top: 20px;
+        margin-bottom: 60px;
       }
-      el.appendChild(frag);
-    }
 
-  document.addEventListener('turbo:load', buildStarfield);
-  if (document.readyState !== 'loading') buildStarfield();
-  else document.addEventListener('DOMContentLoaded', buildStarfield);
-  </script>
+      /* Page content defaults */
+      .page-wrap {
+        text-align: center;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Styles the input where I type my guess */
+      .page-wrap input[type="text"] {
+        background: #fff;
+        color: #000;
+        border: 2px solid #000;
+        padding: 6px 8px;
+        border-radius: 6px;
+        font-size: 18px;
+      }
+
+      /* button wrap details */
+      .page-wrap button:not(.btn),
+      /* hint button */
+      .page-wrap input[type="submit"]:not(.btn),
+      /* submit button*/
+      .page-wrap a.btn:not(.btn) {
+        background: rgb(242, 96, 70);
+        color: #fff;
+        border: 2px solid #000000;
+        padding: 8px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color .3s, transform .05s;
+        text-decoration: none;
+      }
+
+      /* button hover details */
+      .page-wrap button:not(.btn):hover,
+      /* hover*/
+      .page-wrap input[type="submit"]:not(.btn):hover,
+      .page-wrap a.btn:not(.btn):hover {
+        background: #629deb;
+        border-color: #000;
+      }
+
+      .page-wrap button:not(.btn):active,
+      .page-wrap input[type="submit"]:not(.btn):active {
+        transform: translateY(1px);
+      }
+
+      .btn-group .btn.active {
+        filter: brightness(.92);
+        outline: 2px solid #000;
+      }
+
+      .page-wrap p,
+      .page-wrap label {
+        font-size: 18px;
+      }
+
+      /* Difficulty pill styling with per-level colours */
+      #current-difficulty {
+        display: block;
+        width: fit-content;
+        margin: 10px auto 6px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-weight: 800;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+        text-shadow: 1px 1px 0 #000;
+        border: 2px solid #000;
+        box-shadow: 0 6px 0 rgba(0, 0, 0, .25);
+        backdrop-filter: blur(2px);
+      }
+
+      #current-difficulty.difficulty-easy {
+        background: rgba(40, 167, 69, .2);
+        color: #9ef7b1;
+        border-color: #1b5e20;
+      }
+
+      #current-difficulty.difficulty-normal {
+        background: rgba(0, 123, 255, .2);
+        color: #b6d8ff;
+        border-color: #0d47a1;
+      }
+
+      #current-difficulty.difficulty-hard {
+        background: rgba(220, 53, 69, .2);
+        color: #ffb3b8;
+        border-color: #7f1d1d;
+      }
+
+      /* Score badges */
+      #best-score,
+      #run-score {
+        display: inline-block;
+        margin: 8px 6px 6px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-weight: 800;
+        letter-spacing: .6px;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, .15);
+        color: #fefefe;
+        border: 2px solid #000;
+        box-shadow: 0 4px 0 rgba(0, 0, 0, .25);
+      }
+
+      #best-score .value {
+        color: #ffe066;
+      }
+
+      #run-score .value {
+        color: #f8b4ff;
+      }
+
+      /* Placeholder where I show a “new best” badge if needed */
+      #new-best {
+        min-height: 24px;
+        margin: 4px 0 16px;
+      }
+
+      .new-best {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #ffd54f;
+        color: #000;
+        font-weight: 900;
+        border: 2px solid #000;
+        box-shadow: 0 4px 0 rgba(0, 0, 0, .25);
+        animation: pulse .9s ease-in-out 2;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.06);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Dynamic star field layer */
+      #starfield {
+        position: fixed;
+        /* stays put even if the page scrolls */
+        inset: 0;
+        /* top / right / bottom / left: 0     */
+        z-index: -1;
+        /* behind all page content            */
+        pointer-events: none;
+        /* never intercept clicks             */
+      }
+
+      #starfield .star {
+        position: absolute;
+        width: 2px;
+        /* base size. JS will vary this per star */
+        height: 2px;
+        background: #fff;
+        border-radius: 50%;
+        opacity: 0.9;
+      }
+    </style>
+
+    <div class="page-wrap">
+      <h1 class="game-title">Alien Translations</h1>
+
+      <!-- Difficulty buttons rendered with the current session difficulty -->
+      <%= render "alien_translations/difficulty_buttons" , locals: { difficulty: (session[:difficulty] ||
+        :normal).to_sym } %>
+
+        <!-- High score badge -->
+        <p id="best-score">
+          High Score:
+          <span class="value">
+            <%= @best_score.present? ? @best_score : "—" %>
+          </span>
+        </p>
+
+        <!-- Current run score badge -->
+        <p id="run-score">
+          Run Score:
+          <span class="value">
+            <%= @run_score.present? ? @run_score : "0" %>
+          </span>
+        </p>
+
+        <!-- Where I’ll inject “New Best!” feedback when needed -->
+        <div id="new-best"></div>
+
+        <!-- Main game content (puzzle, hint, etc.) -->
+        <%= render partial: "alien_translations/game_content" , locals: { puzzle: @puzzle, hint: @hint, difficulty:
+          session[:difficulty] } %>
+    </div>
+
+    <!-- Small click sound for UX when changing difficulty -->
+    <audio id="click-sound" preload="auto">
+      <source src="<%= asset_path('mouse_click.mp3') %>" type="audio/mpeg">
+    </audio>
+
+    <script>
+      // Plays a click sound whenever one of the difficulty forms is submitted.
+      function attachDifficultySound() {
+        const clickSound = document.getElementById("click-sound");
+        document.querySelectorAll('.btn-group form').forEach((form) => {
+          form.addEventListener('submit', () => {
+            if (!clickSound) return;
+            clickSound.currentTime = 0;
+            // If autoplay is blocked, I ignore the promise rejection.
+            clickSound.play().catch(() => { });
+          });
+        });
+      }
+
+      document.addEventListener("turbo:load", attachDifficultySound);
+      document.addEventListener("turbo:render", attachDifficultySound);
+      document.addEventListener("turbo:frame-load", attachDifficultySound);
+    </script>
+
+    <script>
+      // Builds a random star field once per page view.
+      // I guard with data-builtin to avoid duplicates on Turbo renders.
+      function buildStarfield() {
+        const el = document.getElementById('starfield');
+        if (!el || el.dataset.built) return; // prevent re-building
+        el.dataset.built = '1';
+
+        const STAR_COUNT = 60000; // I set this to control how dense the star field is
+        const frag = document.createDocumentFragment();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        for (let i = 0; i < STAR_COUNT; i++) {
+          const s = document.createElement('span');
+          s.className = 'star';
+
+          // Random position across the current viewport in pixels
+          s.style.left = (Math.random() * vw) + 'px';
+          s.style.top = (Math.random() * vh) + 'px';
+
+          // Random size with a bias toward small stars
+          const r = Math.random();
+          const size = r < 0.70 ? 1 : (r < 0.95 ? 2 : 3);
+          s.style.width = size + 'px';
+          s.style.height = size + 'px';
+
+          // Slight variation in brightness
+          s.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
+
+          frag.appendChild(s);
+        }
+
+        el.appendChild(frag);
+      }
+
+      // Works with Turbo; also supports plain DOMContentLoaded if Turbo isn’t present
+      document.addEventListener('turbo:load', buildStarfield);
+      if (document.readyState !== 'loading') {
+        buildStarfield();
+      } else {
+        document.addEventListener('DOMContentLoaded', buildStarfield);
+      }
+    </script>
