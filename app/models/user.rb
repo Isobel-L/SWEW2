@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_secure_password
   has_many :high_scores, dependent: :destroy
 
   # Per-game high from the HighScore table (0 if none)
