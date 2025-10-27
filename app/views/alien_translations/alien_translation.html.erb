@@ -1,24 +1,24 @@
-<%# Give the <body> tag a page-specific class so global styles in the layout can skip this page %>
+<%# Give <body> a page-specific class so global layout rules can skip this page %>
   <% content_for :body_class, "alien-translations-page" %>
 
-    <!-- Full-viewport star container -->
+    <!-- Background star layer (pure decoration; sits behind everything) -->
     <div id="starfield" aria-hidden="true"></div>
 
     <style>
-      /* Title styling (the big Alien Translations) */
+      /* Big title at the top with arcade-style gradient + outline */
       .game-title {
         text-align: center;
         font-family: 'Bangers', cursive;
         font-size: 128px;
 
-        /* Gradient fill clipped to text for the arcade look */
+        /* Gradient is clipped to the text, so the letters look filled */
         background: linear-gradient(to bottom, #ffcc00, #ff3300);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
         color: transparent;
 
-        /* Offset shadows for a neon outline effect */
+        /* Multi-shadow to fake a bright neon outline */
         text-shadow:
           3px 3px 0 #ffffff,
           -3px -3px 0 #5cfaf5,
@@ -29,14 +29,14 @@
         margin-bottom: 60px;
       }
 
-      /* Page content defaults */
+      /* I keep most page styles scoped under .page-wrap to avoid clashing with app-wide CSS */
       .page-wrap {
         text-align: center;
         color: #ffffff;
         font-family: Arial, sans-serif;
       }
 
-      /* Styles the input where I type my guess */
+      /* Guess input styling: readable on dark background */
       .page-wrap input[type="text"] {
         background: #fff;
         color: #000;
@@ -46,13 +46,13 @@
         font-size: 18px;
       }
 
-      /* Buttons: generic, hint, and submit (scoped so global .btn styles don't clash) */
+      /* Buttons I control (and not Bootstrap’s .btn) */
       .page-wrap button:not(.btn),
       .page-wrap input[type="submit"]:not(.btn),
       .page-wrap a.btn:not(.btn) {
         background: rgb(242, 96, 70);
         color: #fff;
-        border: 2px solid #000000;
+        border: 2px solid #000;
         padding: 8px 16px;
         font-size: 16px;
         border-radius: 8px;
@@ -61,7 +61,6 @@
         text-decoration: none;
       }
 
-      /* Hover state for buttons */
       .page-wrap button:not(.btn):hover,
       .page-wrap input[type="submit"]:not(.btn):hover,
       .page-wrap a.btn:not(.btn):hover {
@@ -69,7 +68,6 @@
         border-color: #000;
       }
 
-      /* Click press effect */
       .page-wrap button:not(.btn):active,
       .page-wrap input[type="submit"]:not(.btn):active {
         transform: translateY(1px);
@@ -85,7 +83,7 @@
         font-size: 18px;
       }
 
-      /* Difficulty pill styling with per-level colours */
+      /* Difficulty label shown above the buttons; colour reflects current level */
       #current-difficulty {
         display: block;
         width: fit-content;
@@ -119,23 +117,22 @@
         border-color: #7f1d1d;
       }
 
-      /* Difficulty buttons (works even without Bootstrap) */
+      /* Difficulty button row (works with or without Bootstrap present) */
       #difficulty-buttons {
         margin-bottom: 10px;
       }
 
       #difficulty-buttons .btn-group {
         display: inline-flex;
-        /* line up horizontally */
         gap: 10px;
-        /* space between buttons */
+        /* space between the buttons */
         align-items: center;
         justify-content: center;
       }
 
       #difficulty-buttons .btn-group form {
         display: inline-block;
-        /* each Rails `button_to` form stays inline */
+        /* each button_to stays inline */
         margin: 0;
       }
 
@@ -152,12 +149,12 @@
         transition: filter .15s ease;
       }
 
-      /* colours for each difficulty */
+      /* Colours for each difficulty button (Bootstrap-compatible class names) */
       #difficulty-buttons .btn-success {
         background: #28a745;
       }
 
-      /* Easy  */
+      /* Easy   */
       #difficulty-buttons .btn-primary {
         background: #0d6efd;
       }
@@ -168,7 +165,6 @@
       }
 
       /* Hard   */
-
       #difficulty-buttons .btn:hover {
         filter: brightness(.92);
       }
@@ -177,8 +173,7 @@
         outline: 2px solid #000;
       }
 
-
-      /* Score badges */
+      /* Score badges beneath the buttons */
       #best-score,
       #run-score {
         display: inline-block;
@@ -202,7 +197,7 @@
         color: #f8b4ff;
       }
 
-      /* Placeholder where I show a “new best” badge if needed */
+      /* Space where a “New Best!” chip can be injected by the controller/JS */
       #new-best {
         min-height: 24px;
         margin: 4px 0 16px;
@@ -234,22 +229,19 @@
         }
       }
 
-      /* Dynamic star field layer (no background gradient) */
+      /* Stars are absolutely positioned dots inside a fixed, behind-the-page layer */
       #starfield {
         position: fixed;
-        /* stays put even if the page scrolls */
         inset: 0;
-        /* top/right/bottom/left: 0 */
         z-index: -1;
-        /* behind all page content */
+        /* always behind content */
         pointer-events: none;
-        /* never intercept clicks */
       }
 
       #starfield .star {
         position: absolute;
         width: 2px;
-        /* base size; JS varies this per star */
+        /* JS tweaks actual sizes */
         height: 2px;
         background: #fff;
         border-radius: 50%;
@@ -260,7 +252,7 @@
     <div class="page-wrap">
       <h1 class="game-title">Alien Translations</h1>
 
-      <!-- Difficulty buttons rendered with the current session difficulty -->
+      <!-- Difficulty buttons reflect the current session difficulty -->
       <%= render "alien_translations/difficulty_buttons" , locals: { difficulty: (session[:difficulty] ||
         :normal).to_sym } %>
 
@@ -280,72 +272,29 @@
           </span>
         </p>
 
-        <!-- Where I’ll inject “New Best!” feedback when needed -->
+        <!-- Where “New Best!” can be inserted -->
         <div id="new-best"></div>
 
-        <!-- Main game content (puzzle, hint, etc.) -->
+        <!-- Main game section (puzzle text, hint UI, submit form, etc.) -->
         <%= render partial: "alien_translations/game_content" , locals: { puzzle: @puzzle, hint: @hint, difficulty:
           session[:difficulty] } %>
     </div>
 
-    <!-- Small click sound for UX when changing difficulty -->
-    <audio id="click-sound" preload="auto">
+    <!-- Small click sound. Kept here so this view works on its own; could move to layout later. -->
+    <audio id="click-sound" preload="auto" muted playsinline>
       <source src="<%= asset_path('mouse_click.mp3') %>" type="audio/mpeg">
     </audio>
 
     <script>
-      (function () {
-        const sel = 'button,[type="button"],[type="submit"],a,.btn';
-
-        function audioEl() {
-          return document.getElementById('click-sound');
-        }
-
-        // Prime/unlock the audio once after the first user gesture.
-        function primeAudio() {
-          const a = audioEl(); if (!a) return;
-          a.volume = 1.0;
-          a.load();
-
-          const unlock = () => {
-            // Try to start then immediately pause to satisfy autoplay policies.
-            a.play().then(() => a.pause()).catch(() => { });
-            window.removeEventListener('pointerdown', unlock, { capture: true });
-          };
-
-          window.addEventListener('pointerdown', unlock, { once: true, capture: true });
-        }
-
-        function playClick() {
-          const a = audioEl(); if (!a) return;
-          try { a.currentTime = 0; a.play(); } catch (_) { }
-        }
-
-        function wireClickSounds() {
-          document.querySelectorAll(sel).forEach((el) => {
-            if (el.dataset.soundWired || el.matches('[data-silent]')) return;
-            el.dataset.soundWired = '1';
-            el.addEventListener('click', playClick);
-          });
-        }
-
-        document.addEventListener('turbo:load', () => { primeAudio(); wireClickSounds(); });
-        document.addEventListener('turbo:render', wireClickSounds);
-        document.addEventListener('turbo:frame-load', wireClickSounds);
-      })();
-    </script>
-
-
-
-    <script>
-      // Builds a random star field once per page view.
-      // Guard with data-built to avoid duplicates on Turbo renders.
+      // Starfield:
+      // I only build it once per full page visit. The data attribute prevents duplicates
+      // if Turbo re-renders the view without a full reload.
       function buildStarfield() {
         const el = document.getElementById('starfield');
-        if (!el || el.dataset.built) return; // prevent re-building
+        if (!el || el.dataset.built) return;
         el.dataset.built = '1';
 
-        const STAR_COUNT = 900; // adjust to change star density
+        const STAR_COUNT = 900;             // change to adjust density
         const frag = document.createDocumentFragment();
         const vw = window.innerWidth;
         const vh = window.innerHeight;
@@ -354,17 +303,17 @@
           const s = document.createElement('span');
           s.className = 'star';
 
-          // Random position across the current viewport in pixels
+          // Random position across the viewport
           s.style.left = (Math.random() * vw) + 'px';
           s.style.top = (Math.random() * vh) + 'px';
 
-          // Random size with a bias toward small stars
+          // Mostly small, a few medium/large for variety
           const r = Math.random();
           const size = r < 0.70 ? 1 : (r < 0.95 ? 2 : 3);
           s.style.width = size + 'px';
           s.style.height = size + 'px';
 
-          // Slight variation in brightness
+          // Slight brightness variation so it doesn't look flat
           s.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
 
           frag.appendChild(s);
@@ -373,11 +322,63 @@
         el.appendChild(frag);
       }
 
-      // Works with Turbo; also supports plain DOMContentLoaded if Turbo isn’t present
+      // Works with Turbo; also runs on a plain DOM load if Turbo isn't present
       document.addEventListener('turbo:load', buildStarfield);
       if (document.readyState !== 'loading') {
         buildStarfield();
       } else {
         document.addEventListener('DOMContentLoaded', buildStarfield);
       }
+    </script>
+
+    <script>
+      // Click sound:
+      // One delegated listener on window so it covers all buttons/links—even after Turbo updates.
+      // I unmute and play on the first gesture to satisfy autoplay policies.
+      (function () {
+        const SEL = 'button,[type="button"],[type="submit"],a,.btn';
+        let primed = false;
+        let actx; // WebAudio context for a tiny fallback beep
+
+        function audioEl() {
+          return document.getElementById('click-sound');
+        }
+
+        function playClick() {
+          const a = audioEl();
+          if (!a) return;
+          a.muted = false;      // make sure it's unmuted once the user interacts
+          a.volume = 1;
+          a.currentTime = 0;
+          const p = a.play();
+          if (p && p.catch) p.catch(() => { });
+        }
+
+        // Very short beep if the mp3 refuses to play on some devices
+        function beep() {
+          try {
+            actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+            const o = actx.createOscillator(), g = actx.createGain();
+            o.type = 'square'; o.frequency.value = 1200; g.gain.value = 0.06;
+            o.connect(g); g.connect(actx.destination);
+            o.start(); o.stop(actx.currentTime + 0.08);
+          } catch (_) { }
+        }
+
+        window.addEventListener('pointerdown', (ev) => {
+          const target = ev.target.closest(SEL);
+          if (!target || target.hasAttribute('data-silent')) return;
+
+          // First valid gesture: just play; no play-then-pause race
+          if (!primed) {
+            try { playClick(); } catch (_) { beep(); }
+            try { actx && actx.resume && actx.resume(); } catch (_) { }
+            primed = true;
+            return;
+          }
+
+          // Normal clicks after priming
+          try { playClick(); } catch (_) { beep(); }
+        }, { capture: true, passive: true });
+      })();
     </script>
