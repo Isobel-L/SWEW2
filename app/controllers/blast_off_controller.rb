@@ -12,24 +12,41 @@ class BlastOffController < ApplicationController
   end
 
   def check
-    user_expression = params[:expression]
-    numbers = session[:numbers]
-    target = session[:target]
+  user_expression = params[:expression]
+  numbers = session[:numbers]
+  target  = session[:target]
 
-    # Validate the expression
-    result = validate_and_calculate(user_expression, numbers)
+  result = validate_and_calculate(user_expression, numbers)
 
-    if result[:valid] && result[:value] == target
-      flash[:success] = "Correct! #{user_expression} = #{target}"
-      redirect_to blast_off_path
-    elsif result[:valid]
-      flash[:error] = "Your answer equals #{result[:value]}, but the target is #{target}. Try again!"
-      redirect_to blast_off_path
-    else
-      flash[:error] = result[:error]
-      redirect_to blast_off_path
+  if result[:valid] && result[:value] == target
+    # correct: increment run and update best
+    session[:blast_run]  = session[:blast_run].to_i + 3000
+    session[:blast_best] = [session[:blast_best].to_i, session[:blast_run].to_i].max
+
+    # persist per-user best streak as the high score
+    if session[:user_id]
+      HighScore.update_for!(
+        user:     User.find_by(id: session[:user_id]),
+        game_key: 'blast_off',
+        score:    session[:blast_best].to_i
+      )
     end
+
+    flash[:success] = "Correct! #{user_expression} = #{target} (Run: #{session[:blast_run]}, Best: #{session[:blast_best]})"
+    redirect_to blast_off_path
+  elsif result[:valid]
+    # valid but wrong: reset run
+    session[:blast_run] = 0
+    flash[:error] = "Your answer equals #{result[:value]}, but the target is #{target}. Try again!"
+    redirect_to blast_off_path
+  else
+    # invalid expression: reset run
+    session[:blast_run] = 0
+    flash[:error] = result[:error]
+    redirect_to blast_off_path
   end
+  end
+
 
   private
 
