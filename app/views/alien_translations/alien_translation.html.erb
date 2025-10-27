@@ -294,23 +294,48 @@
     </audio>
 
     <script>
-      // Plays a click sound whenever one of the difficulty forms is submitted.
-      function attachDifficultySound() {
-        const clickSound = document.getElementById("click-sound");
-        document.querySelectorAll('.btn-group form').forEach((form) => {
-          form.addEventListener('submit', () => {
-            if (!clickSound) return;
-            clickSound.currentTime = 0;
-            // If autoplay is blocked, ignore the promise rejection.
-            clickSound.play().catch(() => { });
-          });
-        });
-      }
+      (function () {
+        const sel = 'button,[type="button"],[type="submit"],a,.btn';
 
-      document.addEventListener("turbo:load", attachDifficultySound);
-      document.addEventListener("turbo:render", attachDifficultySound);
-      document.addEventListener("turbo:frame-load", attachDifficultySound);
+        function audioEl() {
+          return document.getElementById('click-sound');
+        }
+
+        // Prime/unlock the audio once after the first user gesture.
+        function primeAudio() {
+          const a = audioEl(); if (!a) return;
+          a.volume = 1.0;
+          a.load();
+
+          const unlock = () => {
+            // Try to start then immediately pause to satisfy autoplay policies.
+            a.play().then(() => a.pause()).catch(() => { });
+            window.removeEventListener('pointerdown', unlock, { capture: true });
+          };
+
+          window.addEventListener('pointerdown', unlock, { once: true, capture: true });
+        }
+
+        function playClick() {
+          const a = audioEl(); if (!a) return;
+          try { a.currentTime = 0; a.play(); } catch (_) { }
+        }
+
+        function wireClickSounds() {
+          document.querySelectorAll(sel).forEach((el) => {
+            if (el.dataset.soundWired || el.matches('[data-silent]')) return;
+            el.dataset.soundWired = '1';
+            el.addEventListener('click', playClick);
+          });
+        }
+
+        document.addEventListener('turbo:load', () => { primeAudio(); wireClickSounds(); });
+        document.addEventListener('turbo:render', wireClickSounds);
+        document.addEventListener('turbo:frame-load', wireClickSounds);
+      })();
     </script>
+
+
 
     <script>
       // Builds a random star field once per page view.
