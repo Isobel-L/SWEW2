@@ -11,14 +11,14 @@
         font-family: 'Bangers', cursive;
         font-size: 128px;
 
-        /* I use a gradient fill clipped to the text to get the arcade look */
+        /* Gradient fill clipped to text for the arcade look */
         background: linear-gradient(to bottom, #ffcc00, #ff3300);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
         color: transparent;
 
-        /* offset shadows to get a neon effect */
+        /* Offset shadows for a neon outline effect */
         text-shadow:
           3px 3px 0 #ffffff,
           -3px -3px 0 #5cfaf5,
@@ -46,11 +46,9 @@
         font-size: 18px;
       }
 
-      /* button wrap details */
+      /* Buttons: generic, hint, and submit (scoped so global .btn styles don't clash) */
       .page-wrap button:not(.btn),
-      /* hint button */
       .page-wrap input[type="submit"]:not(.btn),
-      /* submit button*/
       .page-wrap a.btn:not(.btn) {
         background: rgb(242, 96, 70);
         color: #fff;
@@ -63,15 +61,15 @@
         text-decoration: none;
       }
 
-      /* button hover details */
+      /* Hover state for buttons */
       .page-wrap button:not(.btn):hover,
-      /* hover*/
       .page-wrap input[type="submit"]:not(.btn):hover,
       .page-wrap a.btn:not(.btn):hover {
         background: #629deb;
         border-color: #000;
       }
 
+      /* Click press effect */
       .page-wrap button:not(.btn):active,
       .page-wrap input[type="submit"]:not(.btn):active {
         transform: translateY(1px);
@@ -120,6 +118,65 @@
         color: #ffb3b8;
         border-color: #7f1d1d;
       }
+
+      /* Difficulty buttons (works even without Bootstrap) */
+      #difficulty-buttons {
+        margin-bottom: 10px;
+      }
+
+      #difficulty-buttons .btn-group {
+        display: inline-flex;
+        /* line up horizontally */
+        gap: 10px;
+        /* space between buttons */
+        align-items: center;
+        justify-content: center;
+      }
+
+      #difficulty-buttons .btn-group form {
+        display: inline-block;
+        /* each Rails `button_to` form stays inline */
+        margin: 0;
+      }
+
+      #difficulty-buttons .btn {
+        display: inline-block;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 2px solid #000;
+        font-weight: 700;
+        letter-spacing: .5px;
+        cursor: pointer;
+        color: #fff;
+        box-shadow: 0 4px 0 rgba(0, 0, 0, .25);
+        transition: filter .15s ease;
+      }
+
+      /* colours for each difficulty */
+      #difficulty-buttons .btn-success {
+        background: #28a745;
+      }
+
+      /* Easy  */
+      #difficulty-buttons .btn-primary {
+        background: #0d6efd;
+      }
+
+      /* Normal */
+      #difficulty-buttons .btn-danger {
+        background: #dc3545;
+      }
+
+      /* Hard   */
+
+      #difficulty-buttons .btn:hover {
+        filter: brightness(.92);
+      }
+
+      #difficulty-buttons .btn.active {
+        outline: 2px solid #000;
+      }
+
 
       /* Score badges */
       #best-score,
@@ -177,22 +234,22 @@
         }
       }
 
-      /* Dynamic star field layer */
+      /* Dynamic star field layer (no background gradient) */
       #starfield {
         position: fixed;
         /* stays put even if the page scrolls */
         inset: 0;
-        /* top / right / bottom / left: 0     */
+        /* top/right/bottom/left: 0 */
         z-index: -1;
-        /* behind all page content            */
+        /* behind all page content */
         pointer-events: none;
-        /* never intercept clicks             */
+        /* never intercept clicks */
       }
 
       #starfield .star {
         position: absolute;
         width: 2px;
-        /* base size. JS will vary this per star */
+        /* base size; JS varies this per star */
         height: 2px;
         background: #fff;
         border-radius: 50%;
@@ -244,7 +301,7 @@
           form.addEventListener('submit', () => {
             if (!clickSound) return;
             clickSound.currentTime = 0;
-            // If autoplay is blocked, I ignore the promise rejection.
+            // If autoplay is blocked, ignore the promise rejection.
             clickSound.play().catch(() => { });
           });
         });
@@ -257,13 +314,13 @@
 
     <script>
       // Builds a random star field once per page view.
-      // I guard with data-builtin to avoid duplicates on Turbo renders.
+      // Guard with data-built to avoid duplicates on Turbo renders.
       function buildStarfield() {
         const el = document.getElementById('starfield');
         if (!el || el.dataset.built) return; // prevent re-building
         el.dataset.built = '1';
 
-        const STAR_COUNT = 60000; // I set this to control how dense the star field is
+        const STAR_COUNT = 900; // adjust to change star density
         const frag = document.createDocumentFragment();
         const vw = window.innerWidth;
         const vh = window.innerHeight;
