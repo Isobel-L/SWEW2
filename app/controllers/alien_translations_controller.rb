@@ -119,7 +119,6 @@ class AlienTranslationsController < ApplicationController
     ALLOWED_DIFFICULTIES.include?(sym) ? sym : :normal
   end
 
-  private
   def score_keeper
     @score_keeper ||= HighScores::ScoreKeeper.new(session: session, cookies: cookies)
   end
