@@ -70,7 +70,7 @@ class AlienTranslationsController < ApplicationController
       @hint        = nil
       @puzzle      = @facade.start_new_puzzle!(difficulty: diff)
     
-      # ⬇️ Persist per-user high score (keeps the higher of existing vs new)
+      # Persist per-user high score (keeps the higher of existing vs new)
       if session[:user_id] && @best_score
         HighScore.update_for!(
           user:     User.find_by(id: session[:user_id]),
