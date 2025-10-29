@@ -20,7 +20,16 @@ class BlastOffController < ApplicationController
     result = validate_and_calculate(user_expression, numbers)
 
     if result[:valid] && result[:value] == target
-      flash[:success] = "Correct! #{user_expression} = #{target}"
+      points_earned = 3000
+      session[:blastoff_run_score] ||= 0
+      session[:blastoff_run_score] += points_earned
+
+      if current_user && session[:blastoff_run_score] > current_user.blastoff_points
+        current_user.update(blastoff_points: session[:blastoff_run_score])
+        flash[:success] = "New High Score! +#{points_earned} points."
+      else
+        flash[:success] = "Correct! +#{points_earned} points"
+      end
       redirect_to blast_off_path
     elsif result[:valid]
       flash[:error] = "Your answer equals #{result[:value]}, but the target is #{target}. Try again!"
@@ -34,8 +43,8 @@ class BlastOffController < ApplicationController
   private
 
   def generate_numbers
-    small = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].sample(4)
-    large = [15, 20, 25, 50].sample(2)
+    small = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ].sample(4)
+    large = [ 15, 20, 25, 50 ].sample(2)
     (small + large).shuffle
   end
 
@@ -51,7 +60,7 @@ class BlastOffController < ApplicationController
 
   def validate_and_calculate(expression, available_numbers)
     # Remove spaces
-    expr = expression.gsub(/\s+/, '')
+    expr = expression.gsub(/\s+/, "")
 
     # Extract numbers from expression
     used_numbers = expr.scan(/\d+/).map(&:to_i)
@@ -80,4 +89,3 @@ class BlastOffController < ApplicationController
     end
   end
 end
-

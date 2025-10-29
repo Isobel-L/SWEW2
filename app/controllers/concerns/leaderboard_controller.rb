@@ -1,7 +1,6 @@
 class LeaderboardController < ApplicationController
   def index
-    #Calculate total points and sort descending
-    @users = User.select("id, username, (alien_points + blastoff_points) AS total_points")
-                 .order("total_points DESC")
+    # Calculate total points and sort descending
+    @users = User.all.sort_by(&:total_points).reverse
   end
 end

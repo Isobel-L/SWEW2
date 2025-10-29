@@ -70,6 +70,10 @@ class AlienTranslationsController < ApplicationController
       @hint       = nil
       @puzzle     = @facade.start_new_puzzle!(difficulty: diff)
 
+      if @new_best && current_user
+        current_user.update(alien_points: @best_score)
+      end
+
       respond_to do |format|
         format.turbo_stream { render :create }
         format.html do
