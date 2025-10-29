@@ -70,8 +70,11 @@ class AlienTranslationsController < ApplicationController
       @hint       = nil
       @puzzle     = @facade.start_new_puzzle!(difficulty: diff)
 
-      if @new_best && current_user
-        current_user.update(alien_points: @best_score)
+      if current_user
+        new_score = @run_score.to_i
+        if new_score > (current_user.alien_points || 0)
+          current_user.update!(alien_points: new_score)
+        end
       end
 
       respond_to do |format|

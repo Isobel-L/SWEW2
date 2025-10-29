@@ -24,6 +24,13 @@ class BlastOffController < ApplicationController
       session[:blastoff_run_score] ||= 0
       session[:blastoff_run_score] += points_earned
 
+      if current_user
+        new_score = session[:blastoff_run_score].to_i
+        if new_score > (current_user.blastoff_points || 0)
+          current_user.update!(blastoff_points: new_score)
+        end
+      end
+
       if current_user && session[:blastoff_run_score] > current_user.blastoff_points
         current_user.update(blastoff_points: session[:blastoff_run_score])
         flash[:success] = "New High Score! +#{points_earned} points."
