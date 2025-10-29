@@ -4,7 +4,7 @@
   <%= link_to account_path, class: "profile link-reset" do %>
     <%= image_tag(@user.avatar.presence || "default.png", class: "avatar") %>
     <div class="profile-meta">
-      <div class="handle"><%= @user.name.presence || "@AccountName" %></div>
+      <div class="handle"><%= @user.username.presence || "@AccountName" %></div>
       <div class="school"><%= @user.bio.presence || "(Your bio here)" %></div>
     </div>
   <% end %>
