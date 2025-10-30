@@ -120,6 +120,6 @@ class AlienTranslationsController < ApplicationController
   end
 
   def score_keeper
-    @score_keeper ||= HighScores::ScoreKeeper.new(session: session, cookies: cookies)
+    @score_keeper ||= HighScores::ScoreKeeper.new(session: session, cookies: cookies, user: current_user)
   end
 end
