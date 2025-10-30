@@ -1,11 +1,24 @@
 <div class="home">
   <!-- Clickable profile header (goes to Account page) -->
-  <% if session[:user_id] %>
-    <%= link_to account_path, class: "profile link-reset" do %>
-      <%= image_tag(@user&.avatar.presence || "default.png" , class: "avatar" ) %>
-        <div class="profile-meta">
-          <div class="handle">
-            <%= @user&.name.presence || "@AccountName" %>
+  <<% if session[:user_id] %>
+  <%= link_to account_path, class: "profile link-reset" do %>
+    <%= image_tag(@user.avatar.presence || "default.png", class: "avatar") %>
+    <div class="profile-meta">
+      <div class="handle"><%= @user.username.presence || "@AccountName" %></div>
+      <div class="school"><%= @user.bio.presence || "(Your bio here)" %></div>
+    </div>
+  <% end %>
+  <% end %>
+
+  <section class="games">
+    <%= link_to alien_translation_path, class:"game-card" do %>
+      <div class="game-badge"></div>
+      <div class="game-content">
+        <h2 class="game-title">Alien Translation <span>(spelling)</span></h2>
+        <div class="stats">
+          <div class="stat">
+            <label>high score</label>
+            <div class="stat-box"><%= @alien_high_score || "—" %></div>
           </div>
           <div class="school">
             <%= @user&.bio.presence || "(Your bio here)" %>
