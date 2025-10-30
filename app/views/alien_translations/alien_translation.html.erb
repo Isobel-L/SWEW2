@@ -1,82 +1,384 @@
-<style>
-  .game-title {
-    text-align: center;
-    font-family: 'Bangers', cursive;
-    font-size: 128px;
-    color: #ffffff;
-    background: linear-gradient(to bottom, #ffcc00, #ff3300);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    text-shadow: 3px 3px 0 #ffffff,
-                 -3px -3px 0 #5cfaf5,
-                  3px -3px 0 #41f2ec,
-                 -3px  3px 0 #69edf9;
-    margin-top: 20px;
-    margin-bottom: 60px;
-  }
-  .page-wrap { text-align: center; color: #ffffff; font-family: Arial, sans-serif; }
-  .page-wrap input[type="text"] { background:#fff; color:#000; border:2px solid #000; padding:6px 8px; border-radius:6px; font-size:18px; }
-  .page-wrap button:not(.btn), .page-wrap input[type="submit"]:not(.btn), .page-wrap a.btn:not(.btn) { background:rgb(242,96,70); color:#fff; border:2px solid #000; padding:8px 16px; font-size:16px; border-radius:8px; cursor:pointer; transition:background-color .3s, transform .05s; text-decoration:none; }
-  .page-wrap button:not(.btn):hover, .page-wrap input[type="submit"]:not(.btn):hover, .page-wrap a.btn:not(.btn):hover { background:#629deb; border-color:#000; }
-  .page-wrap button:not(.btn):active, .page-wrap input[type="submit"]:not(.btn):active { transform: translateY(1px); }
-  .btn-group .btn.active { filter:brightness(.92); outline:2px solid #000; }
-  .page-wrap p, .page-wrap label { font-size:18px; }
+<%# Give <body> a page-specific class so global layout rules can skip this page %>
+  <% content_for :body_class, "alien-translations-page" %>
 
-  #current-difficulty { display:block; width:fit-content; margin:10px auto 6px; padding:8px 14px; border-radius:999px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; text-shadow:1px 1px 0 #000; border:2px solid #000; box-shadow:0 6px 0 rgba(0,0,0,.25); backdrop-filter: blur(2px); }
-  #current-difficulty.difficulty-easy   { background: rgba(40,167,69,.2);  color:#9ef7b1; border-color:#1b5e20; }
-  #current-difficulty.difficulty-normal { background: rgba(0,123,255,.2);  color:#b6d8ff; border-color:#0d47a1; }
-  #current-difficulty.difficulty-hard   { background: rgba(220,53,69,.2);  color:#ffb3b8; border-color:#7f1d1d; }
+    <!-- Background star layer (pure decoration; sits behind everything) -->
+    <div id="starfield" aria-hidden="true"></div>
 
-  #best-score, #run-score { display:inline-block; margin:8px 6px 6px; padding:6px 12px; border-radius:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; background:rgba(255,255,255,.15); color:#fefefe; border:2px solid #000; box-shadow:0 4px 0 rgba(0,0,0,.25); }
-  #best-score .value { color:#ffe066; }
-  #run-score .value  { color:#f8b4ff; }
+    <style>
+      /* Big title at the top with arcade-style gradient + outline */
+      .game-title {
+        text-align: center;
+        font-family: 'Bangers', cursive;
+        font-size: 128px;
 
-  #new-best { min-height:24px; margin:4px 0 16px; }
-  .new-best { display:inline-block; padding:6px 12px; border-radius:999px; background:#ffd54f; color:#000; font-weight:900; border:2px solid #000; box-shadow:0 4px 0 rgba(0,0,0,.25); animation:pulse .9s ease-in-out 2; }
-  @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
-</style>
+        /* Gradient is clipped to the text, so the letters look filled */
+        background: linear-gradient(to bottom, #ffcc00, #ff3300);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
 
-<div class="page-wrap">
-  <h1 class="game-title">Alien Translations</h1>
+        /* Multi-shadow to fake a bright neon outline */
+        text-shadow:
+          3px 3px 0 #ffffff,
+          -3px -3px 0 #5cfaf5,
+          3px -3px 0 #41f2ec,
+          -3px 3px 0 #69edf9;
 
-  <%= render "alien_translations/difficulty_buttons",
-             locals: { difficulty: (session[:difficulty] || :normal).to_sym } %>
+        margin-top: 20px;
+        margin-bottom: 60px;
+      }
 
-  <p id="best-score">
-    High Score:
-    <span class="value"><%= @best_score.present? ? @best_score : "—" %></span>
-  </p>
+      /* I keep most page styles scoped under .page-wrap to avoid clashing with app-wide CSS */
+      .page-wrap {
+        text-align: center;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+      }
 
-  <p id="run-score">
-    Run Score:
-    <span class="value"><%= @run_score.present? ? @run_score : "0" %></span>
-  </p>
+      /* Guess input styling: readable on dark background */
+      .page-wrap input[type="text"] {
+        background: #fff;
+        color: #000;
+        border: 2px solid #000;
+        padding: 6px 8px;
+        border-radius: 6px;
+        font-size: 18px;
+      }
 
-  <div id="new-best"></div>
+      /* Buttons I control (and not Bootstrap’s .btn) */
+      .page-wrap button:not(.btn),
+      .page-wrap input[type="submit"]:not(.btn),
+      .page-wrap a.btn:not(.btn) {
+        background: rgb(242, 96, 70);
+        color: #fff;
+        border: 2px solid #000;
+        padding: 8px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color .3s, transform .05s;
+        text-decoration: none;
+      }
 
-  <%= render partial: "alien_translations/game_content",
-             locals: { puzzle: @puzzle, hint: @hint, difficulty: session[:difficulty] } %>
-</div>
+      .page-wrap button:not(.btn):hover,
+      .page-wrap input[type="submit"]:not(.btn):hover,
+      .page-wrap a.btn:not(.btn):hover {
+        background: #629deb;
+        border-color: #000;
+      }
 
-<audio id="click-sound" preload="auto">
-  <source src="<%= asset_path('mouse_click.mp3') %>" type="audio/mpeg">
-</audio>
+      .page-wrap button:not(.btn):active,
+      .page-wrap input[type="submit"]:not(.btn):active {
+        transform: translateY(1px);
+      }
 
-<script>
-  function attachDifficultySound() {
-    const clickSound = document.getElementById("click-sound");
-    document.querySelectorAll('.btn-group form').forEach(form => {
-      form.addEventListener('submit', () => {
-        if (clickSound) {
-          clickSound.currentTime = 0;
-          clickSound.play().catch(() => {});
+      .btn-group .btn.active {
+        filter: brightness(.92);
+        outline: 2px solid #000;
+      }
+
+      .page-wrap p,
+      .page-wrap label {
+        font-size: 18px;
+      }
+
+      /* Difficulty label shown above the buttons; colour reflects current level */
+      #current-difficulty {
+        display: block;
+        width: fit-content;
+        margin: 10px auto 6px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-weight: 800;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+        text-shadow: 1px 1px 0 #000;
+        border: 2px solid #000;
+        box-shadow: 0 6px 0 rgba(0, 0, 0, .25);
+        backdrop-filter: blur(2px);
+      }
+
+      #current-difficulty.difficulty-easy {
+        background: rgba(40, 167, 69, .2);
+        color: #9ef7b1;
+        border-color: #1b5e20;
+      }
+
+      #current-difficulty.difficulty-normal {
+        background: rgba(0, 123, 255, .2);
+        color: #b6d8ff;
+        border-color: #0d47a1;
+      }
+
+      #current-difficulty.difficulty-hard {
+        background: rgba(220, 53, 69, .2);
+        color: #ffb3b8;
+        border-color: #7f1d1d;
+      }
+
+      /* Difficulty button row (works with or without Bootstrap present) */
+      #difficulty-buttons {
+        margin-bottom: 10px;
+      }
+
+      #difficulty-buttons .btn-group {
+        display: inline-flex;
+        gap: 10px;
+        /* space between the buttons */
+        align-items: center;
+        justify-content: center;
+      }
+
+      #difficulty-buttons .btn-group form {
+        display: inline-block;
+        /* each button_to stays inline */
+        margin: 0;
+      }
+
+      #difficulty-buttons .btn {
+        display: inline-block;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 2px solid #000;
+        font-weight: 700;
+        letter-spacing: .5px;
+        cursor: pointer;
+        color: #fff;
+        box-shadow: 0 4px 0 rgba(0, 0, 0, .25);
+        transition: filter .15s ease;
+      }
+
+      /* Colours for each difficulty button (Bootstrap-compatible class names) */
+      #difficulty-buttons .btn-success {
+        background: #28a745;
+      }
+
+      /* Easy   */
+      #difficulty-buttons .btn-primary {
+        background: #0d6efd;
+      }
+
+      /* Normal */
+      #difficulty-buttons .btn-danger {
+        background: #dc3545;
+      }
+
+      /* Hard   */
+      #difficulty-buttons .btn:hover {
+        filter: brightness(.92);
+      }
+
+      #difficulty-buttons .btn.active {
+        outline: 2px solid #000;
+      }
+
+      /* Score badges beneath the buttons */
+      #best-score,
+      #run-score {
+        display: inline-block;
+        margin: 8px 6px 6px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-weight: 800;
+        letter-spacing: .6px;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, .15);
+        color: #fefefe;
+        border: 2px solid #000;
+        box-shadow: 0 4px 0 rgba(0, 0, 0, .25);
+      }
+
+      #best-score .value {
+        color: #ffe066;
+      }
+
+      #run-score .value {
+        color: #f8b4ff;
+      }
+
+      /* Space where a “New Best!” chip can be injected by the controller/JS */
+      #new-best {
+        min-height: 24px;
+        margin: 4px 0 16px;
+      }
+
+      .new-best {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #ffd54f;
+        color: #000;
+        font-weight: 900;
+        border: 2px solid #000;
+        box-shadow: 0 4px 0 rgba(0, 0, 0, .25);
+        animation: pulse .9s ease-in-out 2;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
         }
-      });
-    });
-  }
-  document.addEventListener("turbo:load", attachDifficultySound);
-  document.addEventListener("turbo:render", attachDifficultySound);
-  document.addEventListener("turbo:frame-load", attachDifficultySound);
-</script>
+
+        50% {
+          transform: scale(1.06);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Stars are absolutely positioned dots inside a fixed, behind-the-page layer */
+      #starfield {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        /* always behind content */
+        pointer-events: none;
+      }
+
+      #starfield .star {
+        position: absolute;
+        width: 2px;
+        /* JS tweaks actual sizes */
+        height: 2px;
+        background: #fff;
+        border-radius: 50%;
+        opacity: 0.9;
+      }
+    </style>
+
+    <div class="page-wrap">
+      <h1 class="game-title">Alien Translations</h1>
+
+      <!-- Difficulty buttons reflect the current session difficulty -->
+      <%= render "alien_translations/difficulty_buttons" , locals: { difficulty: (session[:difficulty] ||
+        :normal).to_sym } %>
+
+        <!-- High score badge -->
+        <p id="best-score">
+          High Score:
+          <span class="value">
+            <%= @best_score.present? ? @best_score : "—" %>
+          </span>
+        </p>
+
+        <!-- Current run score badge -->
+        <p id="run-score">
+          Run Score:
+          <span class="value">
+            <%= @run_score.present? ? @run_score : "0" %>
+          </span>
+        </p>
+
+        <!-- Where “New Best!” can be inserted -->
+        <div id="new-best"></div>
+
+        <!-- Main game section (puzzle text, hint UI, submit form, etc.) -->
+        <%= render partial: "alien_translations/game_content" , locals: { puzzle: @puzzle, hint: @hint, difficulty:
+          session[:difficulty] } %>
+    </div>
+
+    <!-- Small click sound. Kept here so this view works on its own; could move to layout later. -->
+    <audio id="click-sound" preload="auto" muted playsinline>
+      <source src="<%= asset_path('mouse_click.mp3') %>" type="audio/mpeg">
+    </audio>
+
+    <script>
+      // Starfield:
+      // I only build it once per full page visit. The data attribute prevents duplicates
+      // if Turbo re-renders the view without a full reload.
+      function buildStarfield() {
+        const el = document.getElementById('starfield');
+        if (!el || el.dataset.built) return;
+        el.dataset.built = '1';
+
+        const STAR_COUNT = 900;             // change to adjust density
+        const frag = document.createDocumentFragment();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        for (let i = 0; i < STAR_COUNT; i++) {
+          const s = document.createElement('span');
+          s.className = 'star';
+
+          // Random position across the viewport
+          s.style.left = (Math.random() * vw) + 'px';
+          s.style.top = (Math.random() * vh) + 'px';
+
+          // Mostly small, a few medium/large for variety
+          const r = Math.random();
+          const size = r < 0.70 ? 1 : (r < 0.95 ? 2 : 3);
+          s.style.width = size + 'px';
+          s.style.height = size + 'px';
+
+          // Slight brightness variation so it doesn't look flat
+          s.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
+
+          frag.appendChild(s);
+        }
+
+        el.appendChild(frag);
+      }
+
+      // Works with Turbo; also runs on a plain DOM load if Turbo isn't present
+      document.addEventListener('turbo:load', buildStarfield);
+      if (document.readyState !== 'loading') {
+        buildStarfield();
+      } else {
+        document.addEventListener('DOMContentLoaded', buildStarfield);
+      }
+    </script>
+
+    <script>
+      // Click sound:
+      // One delegated listener on window so it covers all buttons/links—even after Turbo updates.
+      // I unmute and play on the first gesture to satisfy autoplay policies.
+      (function () {
+        const SEL = 'button,[type="button"],[type="submit"],a,.btn';
+        let primed = false;
+        let actx; // WebAudio context for a tiny fallback beep
+
+        function audioEl() {
+          return document.getElementById('click-sound');
+        }
+
+        function playClick() {
+          const a = audioEl();
+          if (!a) return;
+          a.muted = false;      // make sure it's unmuted once the user interacts
+          a.volume = 1;
+          a.currentTime = 0;
+          const p = a.play();
+          if (p && p.catch) p.catch(() => { });
+        }
+
+        // Very short beep if the mp3 refuses to play on some devices
+        function beep() {
+          try {
+            actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+            const o = actx.createOscillator(), g = actx.createGain();
+            o.type = 'square'; o.frequency.value = 1200; g.gain.value = 0.06;
+            o.connect(g); g.connect(actx.destination);
+            o.start(); o.stop(actx.currentTime + 0.08);
+          } catch (_) { }
+        }
+
+        window.addEventListener('pointerdown', (ev) => {
+          const target = ev.target.closest(SEL);
+          if (!target || target.hasAttribute('data-silent')) return;
+
+          // First valid gesture: just play; no play-then-pause race
+          if (!primed) {
+            try { playClick(); } catch (_) { beep(); }
+            try { actx && actx.resume && actx.resume(); } catch (_) { }
+            primed = true;
+            return;
+          }
+
+          // Normal clicks after priming
+          try { playClick(); } catch (_) { beep(); }
+        }, { capture: true, passive: true });
+      })();
+    </script>

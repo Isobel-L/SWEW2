@@ -45,7 +45,22 @@ class BlastOffController < ApplicationController
       flash[:error] = result[:error]
       redirect_to blast_off_path
     end
+
+    flash[:success] = "Correct! #{user_expression} = #{target} (Run: #{session[:blast_run]}, Best: #{session[:blast_best]})"
+    redirect_to blast_off_path
+  elsif result[:valid]
+    # valid but wrong: reset run
+    session[:blast_run] = 0
+    flash[:error] = "Your answer equals #{result[:value]}, but the target is #{target}. Try again!"
+    redirect_to blast_off_path
+  else
+    # invalid expression: reset run
+    session[:blast_run] = 0
+    flash[:error] = result[:error]
+    redirect_to blast_off_path
   end
+  end
+
 
   private
 
