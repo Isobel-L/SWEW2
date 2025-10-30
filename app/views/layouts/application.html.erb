@@ -1,41 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <%= javascript_importmap_tags %>
-      <title>Space Portal</title>
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <%= csrf_meta_tags %>
-        <%= csp_meta_tag %>
+    <title>Space Portal</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-          <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-          <%= stylesheet_link_tag "application" , "login" , "profile" , "leaderboard" , "buttons" , media: "all" %>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <%= stylesheet_link_tag "application", "login", "profile", "leaderboard", "buttons", media: "all" %>
   </head>
 
-  <body class="<%= content_for?(:body_class) ? yield(:body_class) : '' %>">
+  <body>
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="nav-left">
-        <%= link_to "🌌 Space Portal" , root_path, class: "nav-logo" %>
+        <%= link_to "🌌 Space Portal", root_path, class: "nav-logo" %>
       </div>
 
       <div class="nav-center">
         <% if session[:user_id] %>
-          <%= link_to "Profile" , account_path, class: "nav-link" %>
-            <%= link_to "Leaderboard" , leaderboard_path, class: "nav-link" %>
-              <%= link_to "Alien Translation" , alien_translation_path, class: "nav-link" %>
-                <%= link_to "Blast Off" , blast_off_path, class: "nav-link" %>
+          <%= link_to "Profile", account_path, class: "nav-link" %>
+          <%= link_to "Leaderboard", leaderboard_path, class: "nav-link" %>
+          <%= link_to "Alien Translation", alien_translation_path, class: "nav-link" %>
+          <%= link_to "Blast Off", blast_off_path, class: "nav-link" %>
 
-                  <!-- Fully working logout form -->
-                  <form action="<%= logout_path %>" method="post" class="logout-form">
-                    <input type="hidden" name="_method" value="delete">
-                    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-                      <button type="submit" class="nav-link logout-button">Log Out</button>
-                  </form>
-                  <% else %>
-                    <%= link_to "Home" , root_path, class: "nav-link" %>
-                      <%= link_to "Log In" , login_path, class: "nav-link" %>
-                        <%= link_to "Sign Up" , signup_path, class: "nav-link" %>
-                          <% end %>
+          <!-- ✅ Fully working logout form -->
+          <form action="<%= logout_path %>" method="post" class="logout-form">
+            <input type="hidden" name="_method" value="delete">
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <button type="submit" class="nav-link logout-button">Log Out</button>
+          </form>
+        <% else %>
+          <%= link_to "Home", root_path, class: "nav-link" %>
+          <%= link_to "Log In", login_path, class: "nav-link" %>
+          <%= link_to "Sign Up", signup_path, class: "nav-link" %>
+        <% end %>
       </div>
     </nav>
 
@@ -44,91 +43,90 @@
       <%= yield %>
     </main>
   </body>
-
 </html>
 
 <style>
-  body:not(.alien-translations-page) {
-    margin: 0;
-    font-family: 'Orbitron', sans-serif;
-    background: radial-gradient(circle at top, #0b0b3b 0%, #000010 100%);
-    color: #fff;
-  }
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: radial-gradient(circle at top, #0b0b3b 0%, #000010 100%);
+  color: #fff;
+}
 
-  /* NAVBAR */
-  .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(10, 10, 40, 0.95);
-    border-bottom: 1px solid #00ffff;
-    padding: 12px 40px;
-    box-shadow: 0 0 20px #00ffff;
-    z-index: 9999;
-  }
+/* NAVBAR */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(10, 10, 40, 0.95);
+  border-bottom: 1px solid #00ffff;
+  padding: 12px 40px;
+  box-shadow: 0 0 20px #00ffff;
+  z-index: 9999;
+}
 
-  /* LOGO */
-  .nav-logo {
-    color: #00e0ff;
-    font-weight: bold;
-    font-size: 1.3em;
-    text-decoration: none;
-    text-shadow: 0 0 10px #00ffff;
-  }
+/* LOGO */
+.nav-logo {
+  color: #00e0ff;
+  font-weight: bold;
+  font-size: 1.3em;
+  text-decoration: none;
+  text-shadow: 0 0 10px #00ffff;
+}
 
-  /* NAV LINKS */
-  .nav-center {
-    display: flex;
-    justify-content: center;
-    flex: 1;
-    align-items: center;
-  }
+/* NAV LINKS */
+.nav-center {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  align-items: center;
+}
 
-  .nav-link {
-    margin: 0 20px;
-    color: #fff;
-    text-decoration: none;
-    font-size: 1em;
-    letter-spacing: 0.5px;
-    transition: 0.3s;
-  }
+.nav-link {
+  margin: 0 20px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1em;
+  letter-spacing: 0.5px;
+  transition: 0.3s;
+}
 
-  .nav-link:hover {
-    color: #00ffff;
-    text-shadow: 0 0 10px #00ffff;
-  }
+.nav-link:hover {
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff;
+}
 
-  /* LOGOUT FORM FIX */
-  .logout-form {
-    display: inline;
-    margin: 0;
-    padding: 0;
-  }
+/* LOGOUT FORM FIX */
+.logout-form {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
 
-  .logout-button {
-    background: none;
-    border: none;
-    color: #ff6666;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1em;
-    transition: 0.3s;
-    margin-left: 20px;
-  }
+.logout-button {
+  background: none;
+  border: none;
+  color: #ff6666;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1em;
+  transition: 0.3s;
+  margin-left: 20px;
+}
 
-  .logout-button:hover {
-    color: #ff0000;
-    text-shadow: 0 0 10px #ff4d4d;
-  }
+.logout-button:hover {
+  color: #ff0000;
+  text-shadow: 0 0 10px #ff4d4d;
+}
 
-  /* MAIN CONTENT */
-  .content {
-    padding-top: 90px;
-    min-height: calc(100vh - 90px);
-    text-align: center;
-  }
+/* MAIN CONTENT */
+.content {
+  padding-top: 90px;
+  min-height: calc(100vh - 90px);
+  text-align: center;
+}
 </style>

@@ -20,91 +20,52 @@
             <label>high score</label>
             <div class="stat-box"><%= @alien_high_score || "—" %></div>
           </div>
-          <div class="school">
-            <%= @user&.bio.presence || "(Your bio here)" %>
+          <div class="stat">
+            <label>class ranking</label>
+            <div class="stat-box"><%= @alien_rank || "—" %></div>
           </div>
         </div>
-        <% end %>
-          <% end %>
+      </div>
+    <% end %>
 
-            <section class="games">
-              <%= link_to alien_translation_path, class:"game-card" do %>
-                <div class="game-badge"></div>
-                <div class="game-content">
-                  <h2 class="game-title">Alien Translation <span>(spelling)</span></h2>
-                  <div class="stats">
-                    <div class="stat">
-                      <label>high score</label>
-                      <div class="stat-box">
-                        <%= @alien_high_score || "—" %>
-                      </div>
-                    </div>
-                    <div class="stat">
-                      <label>class ranking</label>
-                      <div class="stat-box">
-                        <%= @alien_rank || "—" %>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <% end %>
+    <%= link_to blast_off_path, class:"game-card" do %>
+      <div class="game-badge"></div>
+      <div class="game-content">
+          <h2 class="game-title"> Blast Off! <span>(maths)</span> </h2>
+        <div class="stats">
+          <div class="stat">
+            <label>high score</label>
+            <div class="stat-box"><%= @blast_high_score || "—" %></div>
+          </div>
+          <div class="stat">
+            <label>class ranking</label>
+            <div class="stat-box"><%= @blast_rank || "—" %></div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </section>
 
-                  <%= link_to blast_off_path, class:"game-card" do %>
-                    <div class="game-badge"></div>
-                    <div class="game-content">
-                      <h2 class="game-title">Blast Off! <span>(maths)</span></h2>
-                      <div class="stats">
-                        <div class="stat">
-                          <label>high score</label>
-                          <div class="stat-box">
-                            <%= @blast_high_score || "—" %>
-                          </div>
-                        </div>
-                        <div class="stat">
-                          <label>class ranking</label>
-                          <div class="stat-box">
-                            <%= @blast_rank || "—" %>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <% end %>
-            </section>
-
-            <%= link_to 'View Leaderboard' , leaderboard_path, class: 'button' %>
-
-              <section class="total-points">
-                <h2>TOTAL POINTS</h2>
-                <h2>
-                  <%= number_with_delimiter(@total_points.to_i) %>
-                </h2>
-                <h2>class ranking</h2>
-                <h2>
-                  <%= @total_rank || "—" %>
-                </h2>
-              </section>
-</div>
+  <%= link_to 'View Leaderboard', leaderboard_path, class: 'button' %>
 
 <style>
-  .button {
-    display: inline-block;
-    background: #007bff;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 15px;
-  }
-
-  .button:hover {
-    background: #0056b3;
-  }
-
-  /* Stack the two stats vertically under TOTAL POINTS */
-  .total-points .stat {
-    display: block;
-    width: 100%;
-    margin: 6px 0 10px;
-    float: none;
-  }
+.button{
+  display:inline-block;
+  background:#007bff;
+  color:white;
+  padding:10px 20px;
+  text-decoration:none;
+  border-radius:5px;
+  margin-top:15px
+}
+.button:hover{background:#0056b3}
 </style>
+
+  <section class="total-points">
+    <h2>TOTAL POINTS</h2>
+    <div class="stat">
+      <label>class ranking</label>
+      <div class="stat-box"><%= @total_rank || "—" %></div>
+    </div>
+  </section>
+</div>
