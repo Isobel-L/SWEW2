@@ -62,23 +62,21 @@ class AlienTranslationsController < ApplicationController
       diff     = (session[:difficulty] || :normal).to_sym
       attempts = session[:attempts].to_i
       hints    = @facade.hints_used.to_i
-    
-      scores       = score_keeper.apply_correct!(difficulty: diff, attempts: attempts, hints: hints)
-      @best_score  = scores[:best]
-      @run_score   = scores[:run]
-      @new_best    = scores[:best] == @run_score
-      @hint        = nil
-      @puzzle      = @facade.start_new_puzzle!(difficulty: diff)
-    
-      # Persist per-user high score (keeps the higher of existing vs new)
-      if session[:user_id] && @best_score
-        HighScore.update_for!(
-          user:     User.find_by(id: session[:user_id]),
-          game_key: 'alien_translations',
-          score:    @best_score.to_i
-        )
+
+      scores   = score_keeper.apply_correct!(difficulty: diff, attempts: attempts, hints: hints)
+      @best_score = scores[:best]
+      @run_score  = scores[:run]
+      @new_best   = scores[:best] == @run_score
+      @hint       = nil
+      @puzzle     = @facade.start_new_puzzle!(difficulty: diff)
+
+      if current_user
+        new_score = @run_score.to_i
+        if new_score > (current_user.alien_points || 0)
+          current_user.update!(alien_points: new_score)
+        end
       end
-    
+
       respond_to do |format|
         format.turbo_stream { render :create }
         format.html do
