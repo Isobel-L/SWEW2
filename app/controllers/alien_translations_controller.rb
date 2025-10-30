@@ -55,9 +55,9 @@ class AlienTranslationsController < ApplicationController
 
   def create
     return redirect_to(alien_translation_path, alert: "No active puzzle.") if inactive_puzzle?
-  
+
     correct = @facade.submit_guess!(params[:attempt])
-  
+
     if correct
       diff     = (session[:difficulty] || :normal).to_sym
       attempts = session[:attempts].to_i
@@ -92,14 +92,13 @@ class AlienTranslationsController < ApplicationController
       @hint       = @facade.last_hint
       @best_score = score_keeper.best
       flash.now[:alert] = "Wrong! Run reset."
-    
+
       respond_to do |format|
-      format.turbo_stream { render :create }
-      format.html { render :alien_translation, status: :unprocessable_entity }
+        format.turbo_stream { render :create }
+        format.html { render :alien_translation, status: :unprocessable_entity }
       end
     end
   end
-
 
   private
 
@@ -117,7 +116,8 @@ class AlienTranslationsController < ApplicationController
     ALLOWED_DIFFICULTIES.include?(sym) ? sym : :normal
   end
 
+  private
   def score_keeper
-    @score_keeper ||= HighScores::ScoreKeeper.new(session: session, cookies: cookies, user: current_user)
+    @score_keeper ||= HighScores::ScoreKeeper.new(session: session, cookies: cookies)
   end
 end

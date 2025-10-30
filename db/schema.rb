@@ -10,17 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_27_091000) do
-  create_table "high_scores", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.string "game_key", null: false
-    t.integer "score", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id", "game_key"], name: "index_high_scores_on_user_id_and_game_key", unique: true
-    t.index ["user_id"], name: "index_high_scores_on_user_id"
-  end
-
+ActiveRecord::Schema[8.0].define(version: 2025_10_17_071706) do
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.text "bio"
@@ -34,6 +24,4 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_27_091000) do
     t.integer "blastoff_points", default: 0, null: false
     t.index ["username"], name: "index_users_on_username", unique: true
   end
-
-  add_foreign_key "high_scores", "users"
 end
