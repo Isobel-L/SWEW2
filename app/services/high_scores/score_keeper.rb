@@ -32,12 +32,15 @@ module HighScores
     end
 
     # Apply scoring for a correct answer; persists to store as candidate for best.
+    # Returns a hash: { run: Integer, best: Integer }
     def apply_correct!(difficulty:, attempts:, hints:)
       gained = word_score(difficulty: difficulty, attempts: attempts, hints: hints)
-      @session[:run_score] = run + gained
+      @session[:run_score]  = run + gained
       @session[:last_score] = gained
+
+      # Record the updated run as a high-score candidate, then fetch current best.
       @store.record!(score: run, game_key: @game_key)
-      run
+      { run: run, best: best }
     end
 
     # Scoring logic
