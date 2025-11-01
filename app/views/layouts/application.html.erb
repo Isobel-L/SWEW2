@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <%= javascript_importmap_tags %>
       <title>Space Portal</title>
@@ -8,10 +9,14 @@
         <%= csp_meta_tag %>
 
           <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-          <%= stylesheet_link_tag "application" , "login" , "profile" , "leaderboard" , "buttons" , media: "all" %>
+          <%= stylesheet_link_tag "application" , "login" , "profile" , "leaderboard" , "buttons" , "starfield" ,
+            media: "all" %>
   </head>
 
-  <body class="<%= content_for?(:body_class) ? yield(:body_class) : '' %>">
+  <body class="starfield <%= content_for?(:body_class) ? yield(:body_class) : '' %>">
+    <!-- Global starfield layer (behind everything but above body background) -->
+    <div id="starfield" aria-hidden="true"></div>
+
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="nav-left">
@@ -43,92 +48,37 @@
     <main class="content">
       <%= yield %>
     </main>
+
+    <!-- Starfield JS (CSP-safe via nonce; same density as Alien Translations) -->
+    <script nonce="<%= content_security_policy_nonce %>">
+      function buildStarfield() {
+        const el = document.getElementById('starfield');
+        if (!el || el.dataset.built) return;
+        el.dataset.built = '1';
+
+        const STAR_COUNT = 900; // same density
+        const frag = document.createDocumentFragment();
+        const vw = window.innerWidth, vh = window.innerHeight;
+
+        for (let i = 0; i < STAR_COUNT; i++) {
+          const s = document.createElement('span');
+          s.className = 'star';
+          s.style.left = (Math.random() * vw) + 'px';
+          s.style.top = (Math.random() * vh) + 'px';
+          const r = Math.random();
+          const size = r < 0.70 ? 1 : (r < 0.95 ? 2 : 3);
+          s.style.width = size + 'px';
+          s.style.height = size + 'px';
+          s.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
+          frag.appendChild(s);
+        }
+        el.appendChild(frag);
+      }
+
+      document.addEventListener('turbo:load', buildStarfield);
+      if (document.readyState !== 'loading') buildStarfield();
+      else document.addEventListener('DOMContentLoaded', buildStarfield);
+    </script>
   </body>
 
 </html>
-
-<style>
-  body:not(.alien-translations-page) {
-    margin: 0;
-    font-family: 'Orbitron', sans-serif;
-    background: radial-gradient(circle at top, #0b0b3b 0%, #000010 100%);
-    color: #fff;
-  }
-
-  /* NAVBAR */
-  .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(10, 10, 40, 0.95);
-    border-bottom: 1px solid #00ffff;
-    padding: 12px 40px;
-    box-shadow: 0 0 20px #00ffff;
-    z-index: 9999;
-  }
-
-  /* LOGO */
-  .nav-logo {
-    color: #00e0ff;
-    font-weight: bold;
-    font-size: 1.3em;
-    text-decoration: none;
-    text-shadow: 0 0 10px #00ffff;
-  }
-
-  /* NAV LINKS */
-  .nav-center {
-    display: flex;
-    justify-content: center;
-    flex: 1;
-    align-items: center;
-  }
-
-  .nav-link {
-    margin: 0 20px;
-    color: #fff;
-    text-decoration: none;
-    font-size: 1em;
-    letter-spacing: 0.5px;
-    transition: 0.3s;
-  }
-
-  .nav-link:hover {
-    color: #00ffff;
-    text-shadow: 0 0 10px #00ffff;
-  }
-
-  /* LOGOUT FORM FIX */
-  .logout-form {
-    display: inline;
-    margin: 0;
-    padding: 0;
-  }
-
-  .logout-button {
-    background: none;
-    border: none;
-    color: #ff6666;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1em;
-    transition: 0.3s;
-    margin-left: 20px;
-  }
-
-  .logout-button:hover {
-    color: #ff0000;
-    text-shadow: 0 0 10px #ff4d4d;
-  }
-
-  /* MAIN CONTENT */
-  .content {
-    padding-top: 90px;
-    min-height: calc(100vh - 90px);
-    text-align: center;
-  }
-</style>
