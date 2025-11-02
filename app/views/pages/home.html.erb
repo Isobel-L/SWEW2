@@ -5,7 +5,7 @@
       <%= image_tag(@user&.avatar.presence || "default.png" , class: "avatar" ) %>
         <div class="profile-meta">
           <div class="handle">
-            <%= @user&.name.presence || "@AccountName" %>
+            <%= @user&.username.presence || "@AccountName" %>
           </div>
           <div class="school">
             <%= @user&.bio.presence || "(Your bio here)" %>
