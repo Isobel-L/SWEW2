@@ -1,5 +1,8 @@
 # SWEW2
 
+This is a working prototype for SWEW2. It is a web application for students to play educational games that will help build skills in spelling and mathematics.
+There are 2 games: Alien Translation (spelling) and Blast Off (maths). Students earn points which is then displayed in a leaderboard.
+
 HOW TO RUN APPLICATION
 ---------------------------
 
